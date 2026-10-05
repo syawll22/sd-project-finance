@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RekeningController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\MutasiController;
+use App\Http\Controllers\SettingController;
+
+// Dashboard
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+// Rekening
+Route::resource('rekening', RekeningController::class);
+
+// Kategori COA (Temporary Route)
+Route::resource('kategori', KategoriController::class);
+
+// Mutasi Transaksi (Temporary Route)
+Route::resource('mutasi', MutasiController::class);
+
+// Settings (Temporary Route)
+Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+Route::put('/settings/profile', [SettingController::class, 'updateProfile'])->name('settings.updateProfile');
+Route::put('/settings/password', [SettingController::class, 'updatePassword'])->name('settings.updatePassword');
