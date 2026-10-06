@@ -1,0 +1,5 @@
+[providers]
+php = "php"
+
+[variables]
+NIXPACKS_PHP_EXTENSIONS = "pdo, pdo_mysql, mysqli, mbstring, openssl, tokenizer, xml, ctype, json, bcmath"
