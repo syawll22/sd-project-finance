@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '7238c9a50ce8ee08675e7619dd186795d7a644fe',
+        'reference' => '81c4bedbe94f6b5bfeeebd9c7e0bb324fc2b8277',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -400,7 +400,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '7238c9a50ce8ee08675e7619dd186795d7a644fe',
+            'reference' => '81c4bedbe94f6b5bfeeebd9c7e0bb324fc2b8277',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -555,33 +555,6 @@
             'install_path' => __DIR__ . '/../myclabs/deep-copy',
             'aliases' => array(),
             'dev_requirement' => true,
-        ),
-        'nativephp/electron' => array(
-            'pretty_version' => '1.3.0',
-            'version' => '1.3.0.0',
-            'reference' => '1f1267e3a91ddf6fbc7fd667a2de92d300fcdd0a',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../nativephp/electron',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'nativephp/laravel' => array(
-            'pretty_version' => '1.3.1',
-            'version' => '1.3.1.0',
-            'reference' => '158b830b6fedf272704b899b19b968a97d0595d8',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../nativephp/laravel',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'nativephp/php-bin' => array(
-            'pretty_version' => '1.2.0',
-            'version' => '1.2.0.0',
-            'reference' => 'df5f1f13ac3928f0630bc66a772ae1bf2ed7ebb3',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../nativephp/php-bin',
-            'aliases' => array(),
-            'dev_requirement' => false,
         ),
         'nesbot/carbon' => array(
             'pretty_version' => '3.14.2',
@@ -1016,15 +989,6 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
-        'spatie/laravel-package-tools' => array(
-            'pretty_version' => '1.93.3',
-            'version' => '1.93.3.0',
-            'reference' => '7aeef26bd8d4909bec744dbf47aee7d1395588c1',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../spatie/laravel-package-tools',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'spatie/once' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -1108,15 +1072,6 @@
             'provided' => array(
                 0 => '2.0|3.0',
             ),
-        ),
-        'symfony/filesystem' => array(
-            'pretty_version' => 'v7.4.18',
-            'version' => '7.4.18.0',
-            'reference' => '90d412aa5277c6819db39e7605aa46b1019e3232',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../symfony/filesystem',
-            'aliases' => array(),
-            'dev_requirement' => false,
         ),
         'symfony/finder' => array(
             'pretty_version' => 'v7.4.20',
