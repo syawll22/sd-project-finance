@@ -1,0 +1,15 @@
+{
+    "name": "S&D Finance System",
+    "short_name": "S&D Finance",
+    "start_url": "/",
+    "background_color": "#F8FAFC",
+    "theme_color": "#0F172A",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/2838/2838694.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

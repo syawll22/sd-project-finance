@@ -10,11 +10,25 @@ use Illuminate\Support\Facades\Storage;
 
 class MutasiController extends Controller
 {
-    public function index()
-    {
-        $mutasi = Mutasi::with(['rekening', 'kategori'])->latest()->get();
-        return view('mutasi.index', compact('mutasi'));
+    public function index(Request $request)
+{
+    $query = Mutasi::with(['rekening', 'kategori']);
+
+    // Filter per Rekening / Bank jika dipilih
+    if ($request->filled('rekening_id')) {
+        $query->where('rekening_id', $request->rekening_id);
     }
+
+    // Filter per Jenis (masuk/keluar/transfer)
+    if ($request->filled('jenis')) {
+        $query->where('jenis', $request->jenis);
+    }
+
+    $mutasi = $query->latest()->get();
+    $rekenings = Rekening::all(); // Mengirimkan data rekening ke view untuk dropdown filter
+
+    return view('mutasi.index', compact('mutasi', 'rekenings'));
+}
 
     public function create()
     {

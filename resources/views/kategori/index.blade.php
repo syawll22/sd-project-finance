@@ -5,13 +5,13 @@
 @section('content')
 <div class="space-y-6" x-data="{ openCreateModal: false, openEditModal: false, editData: {} }">
     
-    <!-- Header Page -->
-    <div class="flex items-center justify-between">
+    <!-- Header Page (Responsive) -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight">Kategori COA</h1>
             <p class="text-xs text-slate-500 mt-1">Chart of Accounts untuk klasifikasi Pemasukan & Pengeluaran.</p>
         </div>
-        <button @click="openCreateModal = true" class="bg-goldAccent hover:bg-amber-600 text-slate-900 font-bold text-xs px-5 py-3 rounded-2xl shadow-lg transition flex items-center gap-2">
+        <button @click="openCreateModal = true" class="bg-goldAccent hover:bg-amber-600 text-slate-900 font-bold text-xs px-5 py-3 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 w-full sm:w-auto">
             <span>+ Tambah Kategori</span>
         </button>
     </div>
@@ -23,57 +23,59 @@
         </div>
     @endif
 
-    <!-- Tabel Kategori -->
+    <!-- Tabel Kategori (Responsive Wrapper) -->
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-        <table class="w-full text-left text-xs">
-            <thead class="bg-slate-50 text-slate-400 font-bold uppercase text-[10px] tracking-wider border-b border-slate-100">
-                <tr>
-                    <th class="px-6 py-4">Kode</th>
-                    <th class="px-6 py-4">Nama Kategori</th>
-                    <th class="px-6 py-4">Tipe COA</th>
-                    <th class="px-6 py-4">Deskripsi</th>
-                    <th class="px-6 py-4 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-50">
-                @forelse($kategoris as $item)
-                <tr class="hover:bg-slate-50 transition">
-                    <td class="px-6 py-4 font-semibold text-slate-400">{{ $item->kode_kategori ?? '-' }}</td>
-                    <td class="px-6 py-4 font-bold text-slate-800">{{ $item->nama_kategori }}</td>
-                    <td class="px-6 py-4">
-                        @if($item->tipe == 'masuk')
-                            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-full uppercase">Pemasukan</span>
-                        @else
-                            <span class="px-3 py-1 bg-rose-100 text-rose-800 font-extrabold text-[10px] rounded-full uppercase">Pengeluaran</span>
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 text-slate-500">{{ $item->deskripsi ?? '-' }}</td>
-                    <td class="px-6 py-4 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <button @click="openEditModal = true; editData = {{ json_encode($item) }}" class="p-2 text-amber-600 hover:bg-amber-50 rounded-xl transition" title="Edit">
-                                ✏️
-                            </button>
-                            <form action="{{ route('kategori.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus kategori ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition" title="Hapus">
-                                    🗑️
+        <div class="overflow-x-auto w-full">
+            <table class="w-full text-left text-xs min-w-[640px]">
+                <thead class="bg-slate-50 text-slate-400 font-bold uppercase text-[10px] tracking-wider border-b border-slate-100">
+                    <tr>
+                        <th class="px-6 py-4">Kode</th>
+                        <th class="px-6 py-4">Nama Kategori</th>
+                        <th class="px-6 py-4">Tipe COA</th>
+                        <th class="px-6 py-4">Deskripsi</th>
+                        <th class="px-6 py-4 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse($kategoris as $item)
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-semibold text-slate-400 whitespace-nowrap">{{ $item->kode_kategori ?? '-' }}</td>
+                        <td class="px-6 py-4 font-bold text-slate-800 whitespace-nowrap">{{ $item->nama_kategori }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if($item->tipe == 'masuk')
+                                <span class="px-3 py-1 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-full uppercase">Pemasukan</span>
+                            @else
+                                <span class="px-3 py-1 bg-rose-100 text-rose-800 font-extrabold text-[10px] rounded-full uppercase">Pengeluaran</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-slate-500 whitespace-nowrap">{{ $item->deskripsi ?? '-' }}</td>
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-2">
+                                <button @click="openEditModal = true; editData = {{ json_encode($item) }}" class="p-2 text-amber-600 hover:bg-amber-50 rounded-xl transition" title="Edit">
+                                    ✏️
                                 </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="px-6 py-8 text-center text-slate-400">Belum ada data kategori COA.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+                                <form action="{{ route('kategori.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus kategori ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition" title="Hapus">
+                                        🗑️
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-slate-400">Belum ada data kategori COA.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- MODAL TAMBAH KATEGORI -->
-    <div x-show="openCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm" x-cloak>
+    <div x-show="openCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4" x-cloak>
         <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-6 space-y-4">
             <h3 class="text-base font-bold text-slate-900">Tambah Kategori Baru</h3>
             <form action="{{ route('kategori.store') }}" method="POST" class="space-y-3 text-xs">
@@ -106,7 +108,7 @@
     </div>
 
     <!-- MODAL EDIT KATEGORI -->
-    <div x-show="openEditModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm" x-cloak>
+    <div x-show="openEditModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4" x-cloak>
         <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-6 space-y-4">
             <h3 class="text-base font-bold text-slate-900">Edit Kategori</h3>
             <form :action="'/kategori/' + editData.id" method="POST" class="space-y-3 text-xs">
