@@ -16,6 +16,10 @@ COPY . .
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# --- TAMBAHKAN BARIS INI BIAR COMPOSER NGGAK REWEL ---
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 RUN composer install --no-dev --optimize-autoloader
 
 # Jalankan server bawaan PHP dengan PORT dinamis bawaan Railway
