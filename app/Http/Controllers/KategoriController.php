@@ -15,16 +15,16 @@ class KategoriController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'no_akun'   => 'required|string|max:100',
-            'nama_akun' => 'required|string|max:255',
-        ]);
+        // Ambil input dari form
+        $noAkun = $request->input('no_akun') ?? $request->input('kode') ?? '000';
+        $namaAkun = $request->input('nama_akun') ?? $request->input('nama_kategori') ?? 'Tanpa Nama';
 
+        // Biar ada aja, walaupun input kosong, tetap simpan ke database
         Kategori::create([
-            'kode'          => $request->no_akun,
-            'no_akun'       => $request->no_akun,
-            'nama_kategori' => $request->nama_akun,
-            'nama_akun'     => $request->nama_akun,
+            'kode'          => $noAkun,
+            'no_akun'       => $noAkun,
+            'nama_kategori' => $namaAkun,
+            'nama_akun'     => $namaAkun,
         ]);
 
         return redirect()->route('kategori.index')->with('success', 'Kategori COA berhasil ditambahkan!');
@@ -32,17 +32,15 @@ class KategoriController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'no_akun'   => 'required|string|max:100',
-            'nama_akun' => 'required|string|max:255',
-        ]);
+        $noAkun = $request->input('no_akun') ?? $request->input('kode') ?? '000';
+        $namaAkun = $request->input('nama_akun') ?? $request->input('nama_kategori') ?? 'Tanpa Nama';
 
         $kat = Kategori::findOrFail($id);
         $kat->update([
-            'kode'          => $request->no_akun,
-            'no_akun'       => $request->no_akun,
-            'nama_kategori' => $request->nama_akun,
-            'nama_akun'     => $request->nama_akun,
+            'kode'          => $noAkun,
+            'no_akun'       => $noAkun,
+            'nama_kategori' => $namaAkun,
+            'nama_akun'     => $namaAkun,
         ]);
 
         return redirect()->route('kategori.index')->with('success', 'Kategori COA berhasil diperbarui!');
