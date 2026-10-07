@@ -9,44 +9,46 @@ class RekeningController extends Controller
 {
     public function index()
     {
-        $rekening = Rekening::latest()->paginate(10);
+        $rekening = Rekening::all();
         return view('rekening.index', compact('rekening'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama_rekening'  => 'required|string|max:255',
-            'nomor_rekening' => 'nullable|string|max:100',
-            'atas_nama'      => 'nullable|string|max:255',
-            'saldo'          => 'required|numeric',
+            'nama_rekening' => 'required|string|max:255',
+            'saldo'         => 'nullable|numeric|min:0',
         ]);
 
-        Rekening::create($request->all());
+        Rekening::create([
+            'nama_rekening' => $request->nama_rekening,
+            'saldo'         => $request->saldo ?? 0, // Jika kosong, set ke 0
+        ]);
 
-        return redirect()->back()->with('success', 'Rekening berhasil ditambahkan!');
+        return redirect()->route('rekening.index')->with('success', 'Rekening berhasil ditambahkan!');
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_rekening'  => 'required|string|max:255',
-            'nomor_rekening' => 'nullable|string|max:100',
-            'atas_nama'      => 'nullable|string|max:255',
-            'saldo'          => 'required|numeric',
+            'nama_rekening' => 'required|string|max:255',
+            'saldo'         => 'nullable|numeric|min:0',
         ]);
 
-        $rek = Rekening::findOrFail($id);
-        $rek->update($request->all());
+        $rekening = Rekening::findOrFail($id);
+        $rekening->update([
+            'nama_rekening' => $request->nama_rekening,
+            'saldo'         => $request->saldo ?? 0,
+        ]);
 
-        return redirect()->back()->with('success', 'Data rekening berhasil diperbarui!');
+        return redirect()->route('rekening.index')->with('success', 'Rekening berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        $rek = Rekening::findOrFail($id);
-        $rek->delete();
+        $rekening = Rekening::findOrFail($id);
+        $rekening->delete();
 
-        return redirect()->back()->with('success', 'Rekening berhasil dihapus!');
+        return redirect()->route('rekening.index')->with('success', 'Rekening berhasil dihapus!');
     }
 }
