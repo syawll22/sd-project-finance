@@ -9,40 +9,46 @@ class KategoriController extends Controller
 {
     public function index()
     {
-        $kategori = Kategori::latest()->paginate(10);
+        $kategori = Kategori::all();
         return view('kategori.index', compact('kategori'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'kode_kategori' => 'nullable|string|unique:kategoris,kode_kategori|max:50',
-            'nama_kategori' => 'required|string|max:255',
+            'no_akun'   => 'required|string|max:100',
+            'nama_akun' => 'required|string|max:255',
         ]);
 
-        Kategori::create($request->all());
+        Kategori::create([
+            'no_akun'   => $request->no_akun,
+            'nama_akun' => $request->nama_akun,
+        ]);
 
-        return redirect()->back()->with('success', 'Kategori berhasil ditambahkan!');
+        return redirect()->route('kategori.index')->with('success', 'Kategori COA berhasil ditambahkan!');
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'kode_kategori' => 'nullable|string|max:50|unique:kategoris,kode_kategori,'.$id,
-            'nama_kategori' => 'required|string|max:255',
+            'no_akun'   => 'required|string|max:100',
+            'nama_akun' => 'required|string|max:255',
         ]);
 
-        $kategori = Kategori::findOrFail($id);
-        $kategori->update($request->all());
+        $kat = Kategori::findOrFail($id);
+        $kat->update([
+            'no_akun'   => $request->no_akun,
+            'nama_akun' => $request->nama_akun,
+        ]);
 
-        return redirect()->back()->with('success', 'Kategori berhasil diperbarui!');
+        return redirect()->route('kategori.index')->with('success', 'Kategori COA berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        $kategori = Kategori::findOrFail($id);
-        $kategori->delete();
+        $kat = Kategori::findOrFail($id);
+        $kat->delete();
 
-        return redirect()->back()->with('success', 'Kategori berhasil dihapus!');
+        return redirect()->route('kategori.index')->with('success', 'Kategori COA berhasil dihapus!');
     }
 }
