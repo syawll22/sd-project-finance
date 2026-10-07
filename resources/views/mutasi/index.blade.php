@@ -74,57 +74,70 @@
                         <th class="pb-4 px-3 text-center">AKSI</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50 text-xs sm:text-sm">
-                    @forelse($mutasi as $item)
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="py-4 px-3 font-semibold text-gray-600 whitespace-nowrap">
-                                {{ \Carbon\Carbon::parse($item->tanggal)->format('d-M-Y') }}
-                            </td>
-                            <td class="py-4 px-3 font-medium text-gray-700 whitespace-nowrap">
-                                {{ $item->no_jurnal ?? '-' }}
-                            </td>
-                            <td class="py-4 px-3 font-medium text-gray-700 whitespace-nowrap">
-                                {{ $item->nama ?? '-' }}
-                            </td>
-                            <td class="py-4 px-3 text-gray-600 whitespace-nowrap">
-                                {{ $item->sumber ?? '-' }}
-                            </td>
-                            <td class="py-4 px-3 text-gray-500 max-w-xs truncate">
-                                {{ $item->keterangan ?? '-' }}
-                            </td>
-                            <td class="py-4 px-3 font-bold text-[#1C2A24] whitespace-nowrap">
-                                {{ $item->kategori->no_akun ?? $item->kategori->kode ?? '-' }}
-                            </td>
-                            <td class="py-4 px-3 font-medium text-gray-700 whitespace-nowrap">
-                                {{ $item->kategori->nama_akun ?? $item->kategori->nama_kategori ?? '-' }}
-                            </td>
-                            <td class="py-4 px-3 text-end font-extrabold text-emerald-600 whitespace-nowrap">
-                                {{ $item->debet > 0 ? 'Rp ' . number_format($item->debet, 0, ',', '.') : '-' }}
-                            </td>
-                            <td class="py-4 px-3 text-end font-extrabold text-rose-600 whitespace-nowrap">
-                                {{ $item->kredit > 0 ? 'Rp ' . number_format($item->kredit, 0, ',', '.') : '-' }}
-                            </td>
-                            <td class="py-4 px-3 text-center whitespace-nowrap">
-                                <div class="flex items-center justify-center gap-1">
-                                    <a href="{{ route('mutasi.edit', $item->id) }}" class="p-1.5 text-gray-400 hover:text-[#D8A749] hover:bg-amber-50 rounded-lg transition" title="Edit">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    </a>
-                                    <form action="{{ route('mutasi.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus mutasi ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Hapus">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="10" class="text-center py-12 text-gray-400 font-medium">Belum ada data mutasi transaksi.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
+               <tbody class="divide-y divide-slate-50">
+                @forelse($mutasis as $index => $item)
+                    <tr class="hover:bg-slate-50 transition">
+                        <!-- Tanggal -->
+                        <td class="px-6 py-4 font-bold text-slate-800 whitespace-nowrap">
+                            {{ \Carbon\Carbon::parse($item->tanggal)->format('d-M-Y') }}
+                        </td>
+
+                        <!-- No Jurnal (Kalo kosong, panggil ID/Auto JRN) -->
+                        <td class="px-6 py-4 font-mono font-bold text-slate-600">
+                            {{ $item->no_jurnal ?? ('JRN-' . str_pad($item->id, 4, '0', STR_PAD_LEFT)) }}
+                        </td>
+
+                        <!-- Nama & Sumber Rekening -->
+                        <td class="px-6 py-4 font-semibold text-slate-700">
+                            {{ $item->rekening->nama_rekening ?? $item->rekening->nama_bank ?? 'Kas Utama' }}
+                        </td>
+                        <td class="px-6 py-4 text-slate-500">
+                            {{ $item->rekening->nama_bank ?? 'Bank/Kas' }}
+                        </td>
+
+                        <!-- Keterangan -->
+                        <td class="px-6 py-4 text-slate-600">
+                            {{ $item->keterangan ?? '-' }}
+                        </td>
+
+                        <!-- No COA & Nama COA -->
+                        <td class="px-6 py-4 font-bold text-slate-800">
+                            {{ $item->kategori->no_akun ?? '111001' }}
+                        </td>
+                        <td class="px-6 py-4 font-semibold text-slate-700">
+                            {{ $item->kategori->nama_akun ?? 'KAS KECIL' }}
+                        </td>
+
+                        <!-- Debet / Kredit / Nominal -->
+                        <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
+                            Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
+                        </td>
+                        <td class="px-6 py-4 text-right text-slate-400 whitespace-nowrap">
+                            -
+                        </td>
+
+                        <!-- Aksi (Edit & Delete) -->
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('mutasi.edit', $item->id) }}" class="text-slate-400 hover:text-amber-600">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                </a>
+                                <form action="{{ route('mutasi.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data mutasi ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-slate-400 hover:text-rose-600">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="10" class="px-6 py-8 text-center text-slate-400">Belum ada data mutasi.</td>
+                    </tr>
+                @endforelse
+            </tbody>
             </table>
         </div>
     </div>
