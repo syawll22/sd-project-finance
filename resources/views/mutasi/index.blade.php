@@ -3,7 +3,7 @@
 @section('title', 'Mutasi Transaksi - S&D Finance')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6 text-xs">
+<div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeImage: '' }">
     
     <!-- Header Page -->
     <div class="flex items-center justify-between">
@@ -96,9 +96,9 @@
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
-                                    <a href="{{ asset($item->bukti_foto) }}" target="_blank" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition inline-block">
+                                    <button @click="activeImage = '{{ asset($item->bukti_foto) }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
                                         Lihat Foto
-                                    </a>
+                                    </button>
                                 @else
                                     <span class="text-slate-300">-</span>
                                 @endif
@@ -125,6 +125,19 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- Image Modal Popup -->
+    <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" style="display: none;">
+        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-2xl w-full p-4 relative shadow-2xl">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-slate-800 text-sm">Bukti Transaksi</h3>
+                <button @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">&times;</button>
+            </div>
+            <div class="flex justify-center bg-slate-100 rounded-2xl overflow-hidden p-2">
+                <img :src="activeImage" class="max-h-[75vh] object-contain rounded-xl" alt="Bukti Mutasi">
+            </div>
         </div>
     </div>
 
