@@ -18,10 +18,31 @@
 
     <!-- Filter Card -->
     <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100">
-        <label class="block font-semibold text-slate-600 mb-2">FILTER REKENING / BANK</label>
-        <select class="w-full md:w-1/3 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
-            <option value="">-- Semua Rekening / Bank --</option>
-        </select>
+        <form method="GET" action="{{ route('mutasi.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
+                <label class="block font-semibold text-slate-600 mb-2">FILTER REKENING / BANK</label>
+                <select name="rekening_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
+                    <option value="">-- Semua Rekening / Bank --</option>
+                    @foreach($rekenings as $rek)
+                        <option value="{{ $rek->id }}" {{ request('rekening_id') == $rek->id ? 'selected' : '' }}>
+                            {{ $rek->nama_bank ?? $rek->nama_rekening }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block font-semibold text-slate-600 mb-2">FILTER BULAN</label>
+                <input type="month" name="bulan" value="{{ request('bulan') }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="px-5 py-2.5 bg-[#1C2A24] text-white font-bold rounded-xl transition hover:bg-slate-800">
+                    Filter Data
+                </button>
+                <a href="{{ route('mutasi.index') }}" class="px-4 py-2.5 bg-slate-100 text-slate-600 font-bold rounded-xl transition hover:bg-slate-200">
+                    Reset
+                </a>
+            </div>
+        </form>
     </div>
 
     <!-- Table Card -->
@@ -50,7 +71,7 @@
                                 {{ \Carbon\Carbon::parse($item->tanggal)->format('d-M-Y') }}
                             </td>
                             <td class="px-6 py-4 font-mono font-bold text-slate-600">
-                                {{ $item->no_jurnal ?? ('JRN-' . str_pad($item->id, 4, '0', STR_PAD_LEFT)) }}
+                                {{ $item->no_jurnal }}
                             </td>
                             <td class="px-6 py-4 font-semibold text-slate-700">
                                 {{ $item->rekening->nama_rekening ?? '-' }}
@@ -75,7 +96,7 @@
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
-                                    <a href="{{ asset('storage/' . $item->bukti_foto) }}" target="_blank" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
+                                    <a href="{{ asset($item->bukti_foto) }}" target="_blank" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition inline-block">
                                         Lihat Foto
                                     </a>
                                 @else
@@ -99,7 +120,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="11" class="px-6 py-8 text-center text-slate-400">Belum ada data mutasi.</td>
+                            <td colspan="11" class="px-6 py-8 text-center text-slate-400">Belum ada data mutasi yang cocok dengan filter.</td>
                         </tr>
                     @endforelse
                 </tbody>

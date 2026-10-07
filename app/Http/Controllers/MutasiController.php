@@ -11,44 +11,27 @@ use Illuminate\Database\Schema\Blueprint;
 
 class MutasiController extends Controller
 {
-    public function index()
-    {
-        $mutasis = Mutasi::with(['rekening', 'kategori'])->latest()->get();
+    public function index(Request $request)
+{
+    $query = Mutasi::with(['rekening', 'kategori']);
 
-        // Kirim $mutasis dan $mutasi sekaligus biar nggak bikin bentrok cache
-        return view('mutasi.index', [
-            'mutasis' => $mutasis,
-            'mutasi'  => $mutasis
-        ]);
+    // Filter Berdasarkan Rekening / Bank
+    if ($request->filled('rekening_id')) {
+        $query->where('rekening_id', $request->rekening_id);
     }
 
-    public function create()
-    {
-        $rekenings = Rekening::all();
-        $kategoris = Kategori::all();
-        return view('mutasi.create', compact('rekenings', 'kategoris'));
+    // Filter Berdasarkan Bulan (Format: YYYY-MM)
+    if ($request->filled('bulan')) {
+        $query->whereRaw("DATE_FORMAT(tanggal, '%Y-%m') = ?", [$request->bulan]);
     }
-    public function edit(Mutasi $mutasi)
-{
-    $rekenings = \App\Models\Rekening::all();
-    $kategoris = \App\Models\Kategori::all();
-    return view('mutasi.edit', compact('mutasi', 'rekenings', 'kategoris'));
+
+    $mutasis = $query->latest()->get();
+    $rekenings = Rekening::all();
+
+    return view('mutasi.index', compact('mutasis', 'rekenings'));
 }
 
-public function update(Request $request, Mutasi $mutasi)
-{
-    // Validasi & Update Logic
-    $mutasi->update($request->all());
-    return redirect()->route('mutasi.index')->with('success', 'Mutasi berhasil diubah!');
-}
-
-public function destroy(Mutasi $mutasi)
-{
-    $mutasi->delete();
-    return redirect()->route('mutasi.index')->with('success', 'Mutasi berhasil dihapus!');
-}
-
-   public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
         'no_jurnal'   => 'required|string|max:255',
@@ -62,7 +45,11 @@ public function destroy(Mutasi $mutasi)
 
     $buktiPath = null;
     if ($request->hasFile('bukti_foto')) {
-        $buktiPath = $request->file('bukti_foto')->store('bukti_mutasi', 'public');
+        $file = $request->file('bukti_foto');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        // Simpan langsung ke public/bukti_mutasi biar aman di Railway
+        $file->move(public_path('bukti_mutasi'), $filename);
+        $buktiPath = 'bukti_mutasi/' . $filename;
     }
 
     Mutasi::create([
