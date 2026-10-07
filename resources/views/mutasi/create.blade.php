@@ -36,7 +36,7 @@
                 <option value="">-- Pilih Kategori --</option>
                 @foreach($kategoris as $kat)
                     <option value="{{ $kat->id }}" {{ (isset($mutasi) && $mutasi->kategori_id == $kat->id) ? 'selected' : '' }}>
-                        {{ $kat->nama_kategori ?? $kat->nama ?? $kat->name ?? 'Kategori #'.$kat->id }}
+                        {{ $kat->nama_akun ?? $kat->nama_kategori ?? $kat->nama ?? $kat->name ?? 'Kategori #'.$kat->id }}
                     </option>
                 @endforeach
             </select>

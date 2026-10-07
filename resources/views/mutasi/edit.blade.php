@@ -35,14 +35,14 @@
 
         <div>
             <label class="block font-semibold text-slate-600 mb-1 text-sm">Kategori COA</label>
-            <select name="kategori_id" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
-                <option value="">-- Pilih Kategori --</option>
-                @foreach($kategoris as $kat)
-                    <option value="{{ $kat->id }}" {{ $mutasi->kategori_id == $kat->id ? 'selected' : '' }}>
-                        {{ $kat->nama_kategori ?? $kat->name }}
-                    </option>
-                @endforeach
-            </select>
+                <select name="kategori_id" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
+                    <option value="">-- Pilih Kategori --</option>
+                    @foreach($kategoris as $kat)
+                        <option value="{{ $kat->id }}" {{ (isset($mutasi) && $mutasi->kategori_id == $kat->id) ? 'selected' : '' }}>
+                            {{ $kat->nama_akun ?? $kat->nama_kategori ?? $kat->nama ?? $kat->name ?? 'Kategori #'.$kat->id }}
+                        </option>
+                    @endforeach
+                </select>
             @error('kategori_id') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
         </div>
 

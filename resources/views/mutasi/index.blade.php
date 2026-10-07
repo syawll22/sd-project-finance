@@ -3,7 +3,7 @@
 @section('title', 'Mutasi Transaksi - S&D Finance')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeImage: '' }">
+<div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeFile: '', activeJurnal: '' }">
     
     <!-- Header Page -->
     <div class="flex items-center justify-between">
@@ -96,7 +96,10 @@
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
-                                    <button @click="activeImage = '{{ asset($item->bukti_foto) }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
+                                    @php
+                                        $fileUrl = str_starts_with($item->bukti_foto, 'storage/') || str_starts_with($item->bukti_foto, 'http') ? asset($item->bukti_foto) : asset('storage/' . $item->bukti_foto);
+                                    @endphp
+                                    <button @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
                                         Lihat Foto
                                     </button>
                                 @else
@@ -128,32 +131,23 @@
         </div>
     </div>
 
-    <!-- Image/File Modal Popup -->
-   <!-- Image/File Modal Popup -->
-    <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" style="display: none;">
-        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-slate-800 text-sm">Bukti Transaksi (Preview)</h3>
-                <button @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">&times;</button>
+    <!-- MODAL POP UP BUKTI PER BARIS (LANGSUNG TAMPIL) -->
+    <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;">
+        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-4xl w-full p-6 relative shadow-2xl flex flex-col max-h-[92vh]">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h3 class="font-bold text-slate-800 text-base">Bukti Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
+                <button @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
             </div>
             
-            <div class="flex flex-col items-center justify-center bg-slate-900 rounded-2xl overflow-hidden min-h-[400px] max-h-[75vh] p-4">
-                <!-- Kalau format PDF -->
-                <template x-if="activeImage && activeImage.toLowerCase().endsWith('.pdf')">
-                    <iframe :src="activeImage" class="w-full h-[65vh] rounded-xl border-0 bg-white"></iframe>
+            <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[500px]">
+                <!-- Jika format PDF, langsung render pakai embed -->
+                <template x-if="activeFile.toLowerCase().endsWith('.pdf')">
+                    <embed :src="activeFile" type="application/pdf" class="w-full h-[70vh] rounded-xl bg-white">
                 </template>
 
-                <!-- Kalau format Gambar -->
-                <template x-if="activeImage && !activeImage.toLowerCase().endsWith('.pdf')">
-                    <div class="text-center w-full">
-                        <img :src="activeImage" class="max-h-[65vh] max-w-full object-contain mx-auto rounded-xl" alt="Bukti Mutasi" onerror="this.style.display='none'; document.getElementById('error-msg').style.display='block';">
-                        <div id="error-msg" style="display:none;" class="py-8 text-white space-y-3">
-                            <p class="text-sm text-slate-300">Gagal memuat preview gambar atau file tidak ditemukan di server.</p>
-                            <a :href="activeImage" target="_blank" class="px-4 py-2 bg-[#D8A749] text-white font-bold rounded-xl inline-block text-xs">
-                                Buka File di Tab Baru
-                            </a>
-                        </div>
-                    </div>
+                <!-- Jika format Gambar (JPG, PNG, HEIC, dll), langsung tampil -->
+                <template x-if="!activeFile.toLowerCase().endsWith('.pdf')">
+                    <img :src="activeFile" class="max-h-[70vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
                 </template>
             </div>
         </div>
