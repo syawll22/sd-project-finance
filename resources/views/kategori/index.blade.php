@@ -29,10 +29,8 @@
             <table class="w-full text-left text-xs min-w-[640px]">
                 <thead class="bg-slate-50 text-slate-400 font-bold uppercase text-[10px] tracking-wider border-b border-slate-100">
                     <tr>
-                        <th class="px-6 py-4">Kode</th>
-                        <th class="px-6 py-4">Nama Kategori</th>
-                        <th class="px-6 py-4">Tipe COA</th>
-                        <th class="px-6 py-4">Deskripsi</th>
+                        <th class="px-6 py-4">No Akun</th>
+                        <th class="px-6 py-4">Nama Akun</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -52,7 +50,7 @@
                         <td class="px-6 py-4 text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-2">
                                 <button @click="openEditModal = true; editData = {{ json_encode($item) }}" class="p-2 text-amber-600 hover:bg-amber-50 rounded-xl transition" title="Edit">
-                                    ✏️
+                
                                 </button>
                                 <form action="{{ route('kategori.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus kategori ini?')">
                                     @csrf

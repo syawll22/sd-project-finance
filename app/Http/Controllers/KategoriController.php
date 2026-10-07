@@ -18,8 +18,6 @@ class KategoriController extends Controller
         $request->validate([
             'kode_kategori' => 'nullable|string|unique:kategoris,kode_kategori|max:50',
             'nama_kategori' => 'required|string|max:255',
-            'tipe'          => 'required|in:masuk,keluar',
-            'deskripsi'     => 'nullable|string',
         ]);
 
         Kategori::create($request->all());
@@ -32,8 +30,6 @@ class KategoriController extends Controller
         $request->validate([
             'kode_kategori' => 'nullable|string|max:50|unique:kategoris,kode_kategori,'.$id,
             'nama_kategori' => 'required|string|max:255',
-            'tipe'          => 'required|in:masuk,keluar',
-            'deskripsi'     => 'nullable|string',
         ]);
 
         $kategori = Kategori::findOrFail($id);

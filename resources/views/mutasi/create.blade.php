@@ -8,13 +8,15 @@
         <h1 class="text-3xl font-extrabold text-[#1C2A24] tracking-tight">Tambah Mutasi</h1>
         <p class="text-xs font-medium text-gray-500 mt-1">Input data transaksi arus kas baru ke dalam sistem.</p>
     </div>
-    <a href="{{ route('mutasi.index') }}" class="text-xs text-gray-500 hover:text-gray-800 font-bold bg-white px-4 py-2.5 rounded-xl border border-gray-200 transition">
-        ← Kembali
+    <a href="{{ route('mutasi.index') }}" class="text-xs text-gray-600 hover:text-gray-900 font-bold bg-white px-4 py-2.5 rounded-xl border border-gray-200 transition flex items-center gap-1.5 shadow-sm">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        <span>Kembali</span>
     </a>
 </div>
 
 <div class="bg-white rounded-[28px] p-6 shadow-sm border border-gray-100/50 max-w-2xl">
-    <!-- PENTING: wajib enctype="multipart/form-data" -->
     <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         
@@ -66,10 +68,14 @@
         <!-- Input File Upload Foto Bukti -->
         <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Bukti Struk / Foto (Opsional)</label>
-            <input type="file" name="bukti_foto" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-sm focus:outline-none focus:border-[#D8A749]">        </div>
+            <input type="file" name="bukti_foto" class="w-full text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:border-[#D8A749] file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300">
+        </div>
 
-        <button type="submit" class="w-full bg-[#D8A749] hover:bg-[#c4953c] text-white font-bold py-3.5 rounded-xl shadow-md transition duration-200 mt-2">
-            Simpan Mutasi
+        <button type="submit" class="w-full bg-[#D8A749] hover:bg-[#c4953c] text-white font-bold py-3.5 rounded-xl shadow-md transition duration-200 mt-2 flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span>Simpan Mutasi</span>
         </button>
     </form>
 </div>

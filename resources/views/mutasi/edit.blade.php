@@ -8,8 +8,11 @@
         <h1 class="text-3xl font-extrabold text-[#1C2A24] tracking-tight">Edit Mutasi</h1>
         <p class="text-xs font-medium text-gray-500 mt-1">Perbarui data transaksi mutasi ini.</p>
     </div>
-    <a href="{{ route('mutasi.index') }}" class="text-xs text-gray-500 hover:text-gray-800 font-bold bg-white px-4 py-2.5 rounded-xl border border-gray-200 transition">
-        ← Kembali
+    <a href="{{ route('mutasi.index') }}" class="text-xs text-gray-600 hover:text-gray-900 font-bold bg-white px-4 py-2.5 rounded-xl border border-gray-200 transition flex items-center gap-1.5 shadow-sm">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        <span>Kembali</span>
     </a>
 </div>
 
@@ -70,16 +73,20 @@
         <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Bukti Struk / Foto</label>
             @if($mutasi->bukti_foto)
-                <div class="mb-3 flex items-center gap-3 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                    <img src="{{ asset('storage/' . $mutasi->bukti_foto) }}" class="w-14 h-14 object-cover rounded-lg border">
-                    <span class="text-xs text-gray-500 font-medium">Foto bukti saat ini. Upload file baru di bawah kalau mau ganti.</span>
+                <div class="mb-3 flex items-center gap-3 bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                    <img src="{{ asset('storage/' . $mutasi->bukti_foto) }}" class="w-12 h-12 object-cover rounded-lg border border-gray-200 shadow-sm">
+                    <span class="text-xs text-gray-500 font-medium">Foto bukti saat ini. Upload file baru di bawah jika ingin mengganti.</span>
                 </div>
             @endif
 
-            <input type="file" name="bukti_foto" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-sm focus:outline-none focus:border-[#D8A749]">        </div>
+            <input type="file" name="bukti_foto" class="w-full text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:border-[#D8A749] file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300">
+        </div>
 
-        <button type="submit" class="w-full bg-[#D8A749] hover:bg-[#c4953c] text-white font-bold py-3.5 rounded-xl shadow-md transition duration-200 mt-2">
-            Update Mutasi
+        <button type="submit" class="w-full bg-[#D8A749] hover:bg-[#c4953c] text-white font-bold py-3.5 rounded-xl shadow-md transition duration-200 mt-2 flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+            </svg>
+            <span>Update Mutasi</span>
         </button>
     </form>
 </div>

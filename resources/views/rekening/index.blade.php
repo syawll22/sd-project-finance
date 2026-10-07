@@ -30,8 +30,6 @@
                 <thead class="bg-slate-50 text-slate-400 font-bold uppercase text-[10px] tracking-wider border-b border-slate-100">
                     <tr>
                         <th class="px-6 py-4">Nama Rekening</th>
-                        <th class="px-6 py-4">Nomor Rekening</th>
-                        <th class="px-6 py-4">Atas Nama</th>
                         <th class="px-6 py-4">Saldo Saat Ini</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
@@ -40,8 +38,6 @@
                     @forelse($rekening as $item)
                     <tr class="hover:bg-slate-50 transition">
                         <td class="px-6 py-4 font-bold text-slate-800 whitespace-nowrap">{{ $item->nama_rekening }}</td>
-                        <td class="px-6 py-4 text-slate-500 whitespace-nowrap">{{ $item->nomor_rekening ?? '-' }}</td>
-                        <td class="px-6 py-4 text-slate-500 whitespace-nowrap">{{ $item->atas_nama ?? '-' }}</td>
                         <td class="px-6 py-4 font-black text-slate-900 whitespace-nowrap">
                             Rp {{ number_format($item->saldo, 0, ',', '.') }}
                         </td>
