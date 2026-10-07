@@ -28,6 +28,25 @@ class MutasiController extends Controller
         $kategoris = Kategori::all();
         return view('mutasi.create', compact('rekenings', 'kategoris'));
     }
+    public function edit(Mutasi $mutasi)
+{
+    $rekenings = \App\Models\Rekening::all();
+    $kategoris = \App\Models\Kategori::all();
+    return view('mutasi.edit', compact('mutasi', 'rekenings', 'kategoris'));
+}
+
+public function update(Request $request, Mutasi $mutasi)
+{
+    // Validasi & Update Logic
+    $mutasi->update($request->all());
+    return redirect()->route('mutasi.index')->with('success', 'Mutasi berhasil diubah!');
+}
+
+public function destroy(Mutasi $mutasi)
+{
+    $mutasi->delete();
+    return redirect()->route('mutasi.index')->with('success', 'Mutasi berhasil dihapus!');
+}
 
     public function store(Request $request)
     {

@@ -20,6 +20,10 @@ Route::resource('kategori', KategoriController::class);
 Route::get('/mutasi', [MutasiController::class, 'index'])->name('mutasi.index');
 Route::get('/mutasi/create', [MutasiController::class, 'create'])->name('mutasi.create');
 Route::post('/mutasi', [MutasiController::class, 'store'])->name('mutasi.store');
+//biar bisa diakses dari route resource, tapi tetap pakai controller MutasiController
+Route::get('/mutasi/{mutasi}/edit', [MutasiController::class, 'edit'])->name('mutasi.edit');
+Route::put('/mutasi/{mutasi}', [MutasiController::class, 'update'])->name('mutasi.update');
+Route::delete('/mutasi/{mutasi}', [MutasiController::class, 'destroy'])->name('mutasi.destroy');
 
 // Settings (Temporary Route)
 Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
