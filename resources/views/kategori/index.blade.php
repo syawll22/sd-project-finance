@@ -43,18 +43,17 @@
                 <tbody class="divide-y divide-slate-50">
                     @forelse($kategori as $item)
                     <tr class="hover:bg-slate-50 transition">
-                        <<!-- Ganti baris NO AKUN ini -->
                         <td class="px-6 py-4 font-bold text-slate-800 whitespace-nowrap">
-                            {{ $item->no_akun ?: ($item->kode ?: '-') }}
+                            {{ $item->no_akun ?? '-' }}
                         </td>
-                        <td class="px-6 py-4 font-medium text-slate-700 whitespace-nowrap">
-                            {{ $item->nama_akun ?: ($item->nama_kategori ?: '-') }}
+                       <td class="px-6 py-4 font-medium text-slate-700 whitespace-nowrap">
+                            {{ $item->nama_akun ?? '-' }}
                         </td>
                         <td class="px-6 py-4 text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
-                                <button @click="openEditModal = true; editData = { id: {{ $item->id }}, no_akun: '{{ $item->no_akun ?: $item->kode }}', nama_akun: '{{ $item->nama_akun ?: $item->nama_kategori }}' }" 
-                                        class="p-2 text-slate-400 hover:text-[#D8A749] hover:bg-amber-50 rounded-xl transition" 
-                                        title="Edit">
+                                <button @click="openEditModal = true; editData = { id: {{ $item->id }}, no_akun: '{{ $item->no_akun }}', nama_akun: '{{ $item->nama_akun }}' }"
+                                    class="p-2 text-slate-400 hover:text-[#D8A749] hover:bg-amber-50 rounded-xl transition" 
+                                    title="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
