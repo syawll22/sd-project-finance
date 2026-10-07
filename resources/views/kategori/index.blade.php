@@ -43,8 +43,9 @@
                 <tbody class="divide-y divide-slate-50">
                     @forelse($kategori as $item)
                     <tr class="hover:bg-slate-50 transition">
+                        <<!-- Ganti baris NO AKUN ini -->
                         <td class="px-6 py-4 font-bold text-slate-800 whitespace-nowrap">
-                            {{ $item->no_akun ?: ($item->kode ?: '-') }}
+                            {{ $item->no_akun ?? $item->kode ?? $item->kode_kategori ?? $item->no_kategori ?? $item->id }}
                         </td>
                         <td class="px-6 py-4 font-medium text-slate-700 whitespace-nowrap">
                             {{ $item->nama_akun ?: ($item->nama_kategori ?: '-') }}
