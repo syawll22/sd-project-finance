@@ -9,9 +9,15 @@ use Illuminate\Database\Schema\Blueprint;
 
 class KategoriController extends Controller
 {
+    public function index()
+    {
+        $kategoris = Kategori::all();
+        return view('kategori.index', compact('kategoris'));
+    }
+
     public function store(Request $request)
     {
-        // AUTO-FIX DATABASE RAILWAY (Jalan otomatis kalau kolom belum ada)
+        // AUTO-FIX DATABASE RAILWAY (Otomatis nambah/rename kolom kalau belum ada)
         if (!Schema::hasColumn('kategoris', 'no_akun')) {
             Schema::table('kategoris', function (Blueprint $table) {
                 if (Schema::hasColumn('kategoris', 'kode_kategori')) {
@@ -34,7 +40,7 @@ class KategoriController extends Controller
             });
         }
 
-        // KODE UTAMA DARI CONTROLLER KAMU
+        // VALIDASI & SIMPAN
         $request->validate([
             'no_akun'   => 'required',
             'nama_akun' => 'required',
@@ -46,5 +52,29 @@ class KategoriController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Kategori berhasil ditambahkan!');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'no_akun'   => 'required',
+            'nama_akun' => 'required',
+        ]);
+
+        $kategori = Kategori::findOrFail($id);
+        $kategori->update([
+            'no_akun'   => $request->no_akun,
+            'nama_akun' => $request->nama_akun,
+        ]);
+
+        return redirect()->back()->with('success', 'Kategori berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        $kategori = Kategori::findOrFail($id);
+        $kategori->delete();
+
+        return redirect()->back()->with('success', 'Kategori berhasil dihapus!');
     }
 }
