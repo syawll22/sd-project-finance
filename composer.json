@@ -14,7 +14,6 @@
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
-        "nunomadedi/nuggets": "^1.0",
         "phpunit/phpunit": "^10.0",
         "spatie/laravel-ignition": "^2.4"
     },
@@ -55,7 +54,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest": false,
+            "pestphp/pest": true,
             "php-http/discovery": true
         }
     },
