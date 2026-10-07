@@ -129,6 +129,7 @@
     </div>
 
     <!-- Image/File Modal Popup -->
+   <!-- Image/File Modal Popup -->
     <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" style="display: none;">
         <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl">
             <div class="flex justify-between items-center mb-4">
@@ -136,15 +137,23 @@
                 <button @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">&times;</button>
             </div>
             
-            <div class="flex items-center justify-center bg-slate-900 rounded-2xl overflow-hidden min-h-[400px] max-h-[75vh] p-4">
+            <div class="flex flex-col items-center justify-center bg-slate-900 rounded-2xl overflow-hidden min-h-[400px] max-h-[75vh] p-4">
                 <!-- Kalau format PDF -->
-                <template x-if="activeImage.toLowerCase().endsWith('.pdf')">
+                <template x-if="activeImage && activeImage.toLowerCase().endsWith('.pdf')">
                     <iframe :src="activeImage" class="w-full h-[65vh] rounded-xl border-0 bg-white"></iframe>
                 </template>
 
-                <!-- Kalau format Gambar (JPG, PNG, WEBP, HEIC, dll) -->
-                <template x-if="!activeImage.toLowerCase().endsWith('.pdf')">
-                    <img :src="activeImage" class="max-h-[65vh] max-w-full object-contain rounded-xl" alt="Bukti Mutasi">
+                <!-- Kalau format Gambar -->
+                <template x-if="activeImage && !activeImage.toLowerCase().endsWith('.pdf')">
+                    <div class="text-center w-full">
+                        <img :src="activeImage" class="max-h-[65vh] max-w-full object-contain mx-auto rounded-xl" alt="Bukti Mutasi" onerror="this.style.display='none'; document.getElementById('error-msg').style.display='block';">
+                        <div id="error-msg" style="display:none;" class="py-8 text-white space-y-3">
+                            <p class="text-sm text-slate-300">Gagal memuat preview gambar atau file tidak ditemukan di server.</p>
+                            <a :href="activeImage" target="_blank" class="px-4 py-2 bg-[#D8A749] text-white font-bold rounded-xl inline-block text-xs">
+                                Buka File di Tab Baru
+                            </a>
+                        </div>
+                    </div>
                 </template>
             </div>
         </div>

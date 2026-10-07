@@ -31,20 +31,18 @@ class MutasiController extends Controller
     return view('mutasi.index', compact('mutasis', 'rekenings'));
 }
 
-    public function create()
+public function create()
 {
     $rekenings = \App\Models\Rekening::all();
-    $kategoris = \App\Models\Kategori::all(); // Sesuaikan kalau nama modelnya beda (misal KategoriCoa)
-    
+    $kategoris = \App\Models\Kategori::all();
     return view('mutasi.create', compact('rekenings', 'kategoris'));
 }
 
- public function edit($id)
+public function edit($id)
 {
     $mutasi = Mutasi::findOrFail($id);
     $rekenings = \App\Models\Rekening::all();
     $kategoris = \App\Models\Kategori::all();
-    
     return view('mutasi.edit', compact('mutasi', 'rekenings', 'kategoris'));
 }
 
