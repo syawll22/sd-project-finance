@@ -9,6 +9,13 @@ class Kategori extends Model
 {
     use HasFactory;
 
-    // Biar gak nge-block kolom apapun saat simpan
-    protected $guarded = ['id'];
+    protected $table = 'kategoris'; 
+
+    // DAFTARKAN SEMUA KEMUNGKINAN NAMA KOLOM BIAR GAK DIBUANG LARAVEL!
+    protected $fillable = [
+        'kode',
+        'no_akun',
+        'nama_kategori',
+        'nama_akun',
+    ];
 }
