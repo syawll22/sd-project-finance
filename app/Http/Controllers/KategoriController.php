@@ -9,8 +9,8 @@ class KategoriController extends Controller
 {
     public function index()
     {
-        $kategoris = Kategori::latest()->paginate(10);
-        return view('kategori.index', compact('kategoris'));
+        $kategori = Kategori::latest()->paginate(10);
+        return view('kategori.index', compact('kategori'));
     }
 
     public function store(Request $request)
