@@ -21,8 +21,10 @@ class KategoriController extends Controller
         ]);
 
         Kategori::create([
-            'no_akun'   => $request->no_akun,
-            'nama_akun' => $request->nama_akun,
+            'kode'          => $request->no_akun,
+            'no_akun'       => $request->no_akun,
+            'nama_kategori' => $request->nama_akun,
+            'nama_akun'     => $request->nama_akun,
         ]);
 
         return redirect()->route('kategori.index')->with('success', 'Kategori COA berhasil ditambahkan!');
@@ -37,8 +39,10 @@ class KategoriController extends Controller
 
         $kat = Kategori::findOrFail($id);
         $kat->update([
-            'no_akun'   => $request->no_akun,
-            'nama_akun' => $request->nama_akun,
+            'kode'          => $request->no_akun,
+            'no_akun'       => $request->no_akun,
+            'nama_kategori' => $request->nama_akun,
+            'nama_akun'     => $request->nama_akun,
         ]);
 
         return redirect()->route('kategori.index')->with('success', 'Kategori COA berhasil diperbarui!');

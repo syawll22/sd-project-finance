@@ -9,10 +9,6 @@ class Kategori extends Model
 {
     use HasFactory;
 
+    // Biar gak nge-block kolom apapun saat simpan
     protected $guarded = ['id'];
-
-    public function mutasis()
-    {
-        return $this->hasMany(Mutasi::class);
-    }
 }

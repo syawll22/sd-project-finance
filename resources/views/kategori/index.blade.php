@@ -90,12 +90,10 @@
                 @csrf
                 <div>
                     <label class="block font-semibold text-slate-600 mb-1">No. Akun / Kode COA</label>
-                    <input type="text" name="no_akun" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" placeholder="Contoh: 101 / 501" required>
-                </div>
+                    <input type="text" name="no_akun" :value="editData.no_akun || editData.kode" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>                </div>
                 <div>
                     <label class="block font-semibold text-slate-600 mb-1">Nama Akun</label>
-                    <input type="text" name="nama_akun" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" placeholder="Contoh: Kas Operasional / Beban Gaji" required>
-                </div>
+                    <input type="text" name="nama_akun" :value="editData.nama_akun || editData.nama_kategori" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>                </div>
                 <div class="flex justify-end gap-2 pt-3">
                     <button type="button" @click="openCreateModal = false" class="px-4 py-2.5 bg-slate-100 text-slate-600 font-bold rounded-xl transition">Batal</button>
                     <button type="submit" class="px-5 py-2.5 bg-[#1C2A24] text-white font-bold rounded-xl hover:bg-[#2c3e36] transition">Simpan</button>
