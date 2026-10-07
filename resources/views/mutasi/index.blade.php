@@ -128,7 +128,7 @@
         </div>
     </div>
 
-    <!-- Image/File Modal Popup (Pop-in langsung) -->
+    <!-- Image/File Modal Popup -->
     <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" style="display: none;">
         <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl">
             <div class="flex justify-between items-center mb-4">
@@ -136,9 +136,16 @@
                 <button @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">&times;</button>
             </div>
             
-            <div class="flex items-center justify-center bg-slate-900 rounded-2xl overflow-hidden min-h-[450px] max-h-[75vh]">
-                <!-- Pop-in universal pakai iframe/object supaya HEIC, PDF, JPG, PNG langsung nampil tanpa ribet -->
-                <iframe :src="activeImage" class="w-full h-[70vh] rounded-xl border-0 bg-white"></iframe>
+            <div class="flex items-center justify-center bg-slate-900 rounded-2xl overflow-hidden min-h-[400px] max-h-[75vh] p-4">
+                <!-- Kalau format PDF -->
+                <template x-if="activeImage.toLowerCase().endsWith('.pdf')">
+                    <iframe :src="activeImage" class="w-full h-[65vh] rounded-xl border-0 bg-white"></iframe>
+                </template>
+
+                <!-- Kalau format Gambar (JPG, PNG, WEBP, HEIC, dll) -->
+                <template x-if="!activeImage.toLowerCase().endsWith('.pdf')">
+                    <img :src="activeImage" class="max-h-[65vh] max-w-full object-contain rounded-xl" alt="Bukti Mutasi">
+                </template>
             </div>
         </div>
     </div>
