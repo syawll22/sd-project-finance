@@ -23,3 +23,4 @@ Route::resource('mutasi', MutasiController::class);
 Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
 Route::put('/settings/profile', [SettingController::class, 'updateProfile'])->name('settings.updateProfile');
 Route::put('/settings/password', [SettingController::class, 'updatePassword'])->name('settings.updatePassword');
+Route::get('/run-migrate-fix', function () {\Illuminate\Support\Facades\Artisan::call('migrate --force');return 'Migration sukses disebarkan bray!';});
