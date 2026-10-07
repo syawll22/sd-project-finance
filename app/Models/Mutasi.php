@@ -11,15 +11,8 @@ class Mutasi extends Model
 
     protected $guarded = ['id'];
 
-    // Relasi ke Rekening
-    public function rekening()
-    {
-        return $this->belongsTo(Rekening::class);
-    }
-
-    // Relasi ke Kategori
     public function kategori()
     {
-        return $this->belongsTo(Kategori::class);
+        return $this->belongsTo(Kategori::class, 'kategori_id');
     }
 }

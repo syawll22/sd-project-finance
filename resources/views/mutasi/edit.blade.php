@@ -16,25 +16,40 @@
     </a>
 </div>
 
-<div class="bg-white rounded-[28px] p-6 shadow-sm border border-gray-100/50 max-w-2xl">
+<div x-data="{ jenis: '{{ old('jenis', $mutasi->jenis) }}' }" class="bg-white rounded-[28px] p-6 shadow-sm border border-gray-100/50 max-w-2xl">
     <form action="{{ route('mutasi.update', $mutasi->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         @method('PUT')
         
         <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
-            <input type="date" name="tanggal" value="{{ old('tanggal', $mutasi->tanggal) }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
+            <input type="date" name="tanggal" value="{{ old('tanggal', \Carbon\Carbon::parse($mutasi->tanggal)->format('Y-m-d')) }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
         </div>
 
-        <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Rekening / Kas</label>
-            <select name="rekening_id" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
-                @foreach($rekenings as $rek)
-                    <option value="{{ $rek->id }}" {{ $mutasi->rekening_id == $rek->id ? 'selected' : '' }}>
-                        {{ $rek->nama_rekening ?? $rek->nama }}
-                    </option>
-                @endforeach
-            </select>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1" x-text="jenis === 'pindah' ? 'Rekening Asal' : 'Rekening / Kas'"></label>
+                <select name="rekening_id" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
+                    @foreach($rekenings as $rek)
+                        <option value="{{ $rek->id }}" {{ old('rekening_id', $mutasi->rekening_id) == $rek->id ? 'selected' : '' }}>
+                            {{ $rek->nama_rekening ?? $rek->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Rekening Tujuan (Muncul jika jenis = pindah) -->
+            <div x-show="jenis === 'pindah'" x-cloak>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Rekening Tujuan</label>
+                <select name="rekening_tujuan_id" :required="jenis === 'pindah'" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]">
+                    <option value="">-- Pilih Rekening Tujuan --</option>
+                    @foreach($rekenings as $rek)
+                        <option value="{{ $rek->id }}" {{ old('rekening_tujuan_id', $mutasi->rekening_tujuan_id) == $rek->id ? 'selected' : '' }}>
+                            {{ $rek->nama_rekening ?? $rek->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
         <div>
@@ -42,25 +57,49 @@
             <select name="kategori_id" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]">
                 <option value="">-- Tanpa Kategori / Umum --</option>
                 @foreach($kategoris as $kat)
-                    <option value="{{ $kat->id }}" {{ $mutasi->kategori_id == $kat->id ? 'selected' : '' }}>
+                    <option value="{{ $kat->id }}" {{ old('kategori_id', $mutasi->kategori_id) == $kat->id ? 'selected' : '' }}>
                         {{ $kat->nama_kategori }}
                     </option>
                 @endforeach
             </select>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Jenis Transaksi</label>
-                <select name="jenis" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
+                <select name="jenis" x-model="jenis" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
                     <option value="masuk" {{ $mutasi->jenis == 'masuk' ? 'selected' : '' }}>Pemasukan (+)</option>
                     <option value="keluar" {{ $mutasi->jenis == 'keluar' ? 'selected' : '' }}>Pengeluaran (-)</option>
-                    <option value="pindah" {{ $mutasi->jenis == 'pindah' ? 'selected' : '' }}>Transfer / Pindah</option>
+                    <option value="pindah" {{ $mutasi->jenis == 'pindah' ? 'selected' : '' }}>Transfer / Pindah Rekening</option>
                 </select>
             </div>
-            <div>
+
+            <!-- Input Nominal Format Rupiah -->
+            <div x-data="{
+                raw: '{{ old('nominal', (int)$mutasi->nominal) }}',
+                formatted: '',
+                formatDisplay(val) {
+                    if (!val) return '';
+                    let num = val.toString().replace(/[^0-9]/g, '');
+                    return num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                },
+                updateVal(e) {
+                    let input = e.target.value.replace(/[^0-9]/g, '');
+                    this.raw = input;
+                    this.formatted = this.formatDisplay(input);
+                },
+                init() {
+                    if (this.raw) this.formatted = this.formatDisplay(this.raw);
+                }
+            }">
                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nominal (Rp)</label>
-                <input type="number" name="nominal" value="{{ old('nominal', $mutasi->nominal) }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
+                <input type="text" 
+                       x-model="formatted" 
+                       @input="updateVal($event)" 
+                       placeholder="0" 
+                       class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" 
+                       required>
+                <input type="hidden" name="nominal" :value="raw">
             </div>
         </div>
 

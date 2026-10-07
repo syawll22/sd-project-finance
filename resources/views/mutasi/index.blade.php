@@ -55,7 +55,7 @@
                     <option value="">-- Semua Jenis --</option>
                     <option value="masuk" {{ request('jenis') == 'masuk' ? 'selected' : '' }}>Pemasukan</option>
                     <option value="keluar" {{ request('jenis') == 'keluar' ? 'selected' : '' }}>Pengeluaran</option>
-                    <option value="transfer" {{ request('jenis') == 'transfer' ? 'selected' : '' }}>Transfer</option>
+                    <option value="pindah" {{ request('jenis') == 'pindah' ? 'selected' : '' }}>Transfer / Pindah</option>
                 </select>
             </div>
 
@@ -131,7 +131,12 @@
                                 {{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->format('d/m/Y') }}
                             </td>
                             <td class="py-4 px-4 font-bold text-[#1C2A24] whitespace-nowrap">
-                                {{ $item->rekening->nama_rekening ?? $item->rekening->nama ?? '-' }}
+                                @if($item->jenis == 'pindah')
+                                    <div>{{ $item->rekening->nama_rekening ?? $item->rekening->nama ?? '-' }}</div>
+                                    <div class="text-[10px] font-normal text-gray-400">➜ {{ $item->rekeningTujuan->nama_rekening ?? $item->rekeningTujuan->nama ?? '-' }}</div>
+                                @else
+                                    {{ $item->rekening->nama_rekening ?? $item->rekening->nama ?? '-' }}
+                                @endif
                             </td>
                             <td class="py-4 px-4 text-gray-600 font-medium whitespace-nowrap">
                                 {{ $item->kategori->nama_kategori ?? $item->kategori->nama ?? '-' }}
@@ -152,7 +157,7 @@
                                 @endif
                             </td>
                             <td class="py-4 px-4 font-extrabold whitespace-nowrap {{ $item->jenis == 'masuk' ? 'text-emerald-600' : ($item->jenis == 'keluar' ? 'text-rose-600' : 'text-sky-600') }}">
-                                {{ $item->jenis == 'keluar' ? '-' : '+' }} Rp {{ number_format($item->nominal, 0, ',', '.') }}
+                                {{ $item->jenis == 'keluar' ? '-' : ($item->jenis == 'masuk' ? '+' : '') }} Rp {{ number_format($item->nominal, 0, ',', '.') }}
                             </td>
                             <td class="py-4 px-4 text-gray-500 text-xs font-medium max-w-xs truncate">
                                 {{ $item->keterangan ?? '-' }}
