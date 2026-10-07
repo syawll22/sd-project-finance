@@ -14,7 +14,12 @@ class MutasiController extends Controller
     public function index()
     {
         $mutasis = Mutasi::with(['rekening', 'kategori'])->latest()->get();
-        return view('mutasi.index', compact('mutasis'));
+
+        // Kirim $mutasis dan $mutasi sekaligus biar nggak bikin bentrok cache
+        return view('mutasi.index', [
+            'mutasis' => $mutasis,
+            'mutasi'  => $mutasis
+        ]);
     }
 
     public function create()
