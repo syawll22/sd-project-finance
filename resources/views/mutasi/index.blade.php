@@ -128,15 +128,17 @@
         </div>
     </div>
 
-    <!-- Image Modal Popup -->
+    <!-- Image/File Modal Popup (Pop-in langsung) -->
     <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" style="display: none;">
-        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-2xl w-full p-4 relative shadow-2xl">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="font-bold text-slate-800 text-sm">Bukti Transaksi</h3>
+        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-slate-800 text-sm">Bukti Transaksi (Preview)</h3>
                 <button @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">&times;</button>
             </div>
-            <div class="flex justify-center bg-slate-100 rounded-2xl overflow-hidden p-2">
-                <img :src="activeImage" class="max-h-[75vh] object-contain rounded-xl" alt="Bukti Mutasi">
+            
+            <div class="flex items-center justify-center bg-slate-900 rounded-2xl overflow-hidden min-h-[450px] max-h-[75vh]">
+                <!-- Pop-in universal pakai iframe/object supaya HEIC, PDF, JPG, PNG langsung nampil tanpa ribet -->
+                <iframe :src="activeImage" class="w-full h-[70vh] rounded-xl border-0 bg-white"></iframe>
             </div>
         </div>
     </div>
