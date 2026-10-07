@@ -11,6 +11,11 @@ class Mutasi extends Model
 
     protected $guarded = ['id'];
 
+    public function rekening()
+    {
+        return $this->belongsTo(Rekening::class, 'rekening_id');
+    }
+
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');

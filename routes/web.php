@@ -17,7 +17,9 @@ Route::resource('rekening', RekeningController::class);
 Route::resource('kategori', KategoriController::class);
 
 // Mutasi Transaksi (Temporary Route)
-Route::resource('mutasi', MutasiController::class);
+Route::get('/mutasi', [MutasiController::class, 'index'])->name('mutasi.index');
+Route::get('/mutasi/create', [MutasiController::class, 'create'])->name('mutasi.create');
+Route::post('/mutasi', [MutasiController::class, 'store'])->name('mutasi.store');
 
 // Settings (Temporary Route)
 Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

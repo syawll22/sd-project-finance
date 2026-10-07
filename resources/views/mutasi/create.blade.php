@@ -3,95 +3,88 @@
 @section('title', 'Tambah Mutasi - S&D Finance')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
-    <div>
-        <h1 class="text-3xl font-extrabold text-[#1C2A24] tracking-tight">Tambah Mutasi</h1>
-        <p class="text-xs font-medium text-gray-500 mt-1">Input data transaksi jurnal baru sesuai standar akuntansi.</p>
+<div class="max-w-2xl mx-auto space-y-6">
+    
+    <!-- Header Page -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Tambah Mutasi Baru</h1>
+            <p class="text-xs text-slate-500 mt-1">Input transaksi penerimaan atau pengeluaran kas/bank.</p>
+        </div>
+        <a href="{{ route('mutasi.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl transition">
+            Kembali
+        </a>
     </div>
-    <a href="{{ route('mutasi.index') }}" class="text-xs text-gray-600 hover:text-gray-900 font-bold bg-white px-4 py-2.5 rounded-xl border border-gray-200 transition flex items-center gap-1.5 shadow-sm">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-        </svg>
-        <span>Kembali</span>
-    </a>
-</div>
 
-<div class="bg-white rounded-[28px] p-6 shadow-sm border border-gray-100/50 max-w-3xl">
-    <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-        @csrf
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Form Card -->
+    <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100">
+        <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4 text-xs">
+            @csrf
+
+            <!-- Tanggal -->
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal <span class="text-rose-500">*</span></label>
-                <input type="date" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
+                <label class="block font-semibold text-slate-600 mb-1">Tanggal Transaksi</label>
+                <input type="date" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                @error('tanggal') <span class="text-rose-500 text-[10px]">{{ $message }}</span> @enderror
             </div>
+
+            <!-- Rekening / Bank -->
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Rekening / Kas <span class="text-rose-500">*</span></label>
-                <select name="rekening_id" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
+                <label class="block font-semibold text-slate-600 mb-1">Rekening / Kas</label>
+                <select name="rekening_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
                     <option value="">-- Pilih Rekening --</option>
                     @foreach($rekenings as $rek)
                         <option value="{{ $rek->id }}" {{ old('rekening_id') == $rek->id ? 'selected' : '' }}>
-                            {{ $rek->nama_rekening ?? $rek->nama }}
+                            {{ $rek->nama_bank ?? $rek->nama_rekening ?? 'Rekening #'.$rek->id }}
                         </option>
                     @endforeach
                 </select>
+                @error('rekening_id') <span class="text-rose-500 text-[10px]">{{ $message }}</span> @enderror
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Kategori COA -->
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">No. Jurnal</label>
-                <input type="text" name="no_jurnal" value="{{ old('no_jurnal') }}" placeholder="Contoh: SALDO AWAL / BKM-01" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]">
+                <label class="block font-semibold text-slate-600 mb-1">Kategori COA</label>
+                <select name="kategori_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                    <option value="">-- Pilih Kategori --</option>
+                    @foreach($kategoris as $kat)
+                        <option value="{{ $kat->id }}" {{ old('kategori_id') == $kat->id ? 'selected' : '' }}>
+                            {{ $kat->no_akun }} - {{ $kat->nama_akun }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('kategori_id') <span class="text-rose-500 text-[10px]">{{ $message }}</span> @enderror
             </div>
+
+            <!-- NOMINAL (PENTING!) -->
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama</label>
-                <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Penerima / Pembayar" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]">
+                <label class="block font-semibold text-slate-600 mb-1">Nominal (Rp)</label>
+                <input type="number" step="any" name="nominal" value="{{ old('nominal') }}" placeholder="Contoh: 1500000" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                @error('nominal') <span class="text-rose-500 text-[10px]">{{ $message }}</span> @enderror
             </div>
+
+            <!-- Keterangan -->
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Sumber</label>
-                <input type="text" name="sumber" value="{{ old('sumber') }}" placeholder="Asal sumber dana" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]">
+                <label class="block font-semibold text-slate-600 mb-1">Keterangan / Catatan</label>
+                <textarea name="keterangan" rows="3" placeholder="Deskripsi transaksi..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">{{ old('keterangan') }}</textarea>
+                @error('keterangan') <span class="text-rose-500 text-[10px]">{{ $message }}</span> @enderror
             </div>
-        </div>
 
-        <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Pilih COA (Akun) <span class="text-rose-500">*</span></label>
-            <select name="kategori_id" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]" required>
-                <option value="">-- Pilih COA --</option>
-                @foreach($kategoris as $kat)
-                    <option value="{{ $kat->id }}" {{ old('kategori_id') == $kat->id ? 'selected' : '' }}>
-                        {{ $kat->no_akun ?? $kat->kode }} - {{ $kat->nama_akun ?? $kat->nama_kategori }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Upload Bukti Transaksi -->
             <div>
-                <label class="block text-xs font-bold text-emerald-600 uppercase mb-1">Nominal Debet (Masuk)</label>
-                <input type="number" step="0.01" name="debet" value="{{ old('debet', 0) }}" placeholder="0" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]">
+                <label class="block font-semibold text-slate-600 mb-1">Bukti Transaksi (Foto/Lampiran)</label>
+                <input type="file" name="bukti_foto" accept="image/*" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
+                @error('bukti_foto') <span class="text-rose-500 text-[10px]">{{ $message }}</span> @enderror
             </div>
-            <div>
-                <label class="block text-xs font-bold text-rose-600 uppercase mb-1">Nominal Kredit (Keluar)</label>
-                <input type="number" step="0.01" name="kredit" value="{{ old('kredit', 0) }}" placeholder="0" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]">
+
+            <!-- Submit Button -->
+            <div class="flex justify-end gap-2 pt-4 border-t border-slate-100">
+                <button type="submit" class="px-6 py-3 bg-[#1C2A24] hover:bg-[#2c3e36] text-white font-bold rounded-xl transition shadow-lg">
+                    Simpan Mutasi
+                </button>
             </div>
-        </div>
+        </form>
+    </div>
 
-        <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Keterangan</label>
-            <textarea name="keterangan" rows="3" placeholder="Catatan transaksi..." class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#D8A749]">{{ old('keterangan') }}</textarea>
-        </div>
-
-        <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Bukti Struk / Foto (Opsional)</label>
-            <input type="file" name="bukti_foto" class="w-full text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:border-[#D8A749] file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300">
-        </div>
-
-        <button type="submit" class="w-full bg-[#D8A749] hover:bg-[#c4953c] text-white font-bold py-3.5 rounded-xl shadow-md transition duration-200 mt-2 flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-            <span>Simpan Transaksi</span>
-        </button>
-    </form>
 </div>
 @endsection
