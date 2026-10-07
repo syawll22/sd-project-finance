@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /var/www/html
 COPY . .
 
-# Langsung set permission tanpa install composer lagi karena vendor udah di-upload dari lokal!
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 RUN sed -i 's/listen 80;/listen ${PORT};/g' /etc/nginx/sites-available/default
