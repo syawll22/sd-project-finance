@@ -76,7 +76,7 @@
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
                                     <a href="{{ asset('storage/' . $item->bukti_foto) }}" target="_blank" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
-                                        Lihat
+                                        Lihat Foto
                                     </a>
                                 @else
                                     <span class="text-slate-300">-</span>

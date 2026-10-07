@@ -50,14 +50,8 @@ public function destroy(Mutasi $mutasi)
 
    public function store(Request $request)
 {
-    // Auto Patch Database jika kolom belum ada
-    if (!Schema::hasColumn('mutasis', 'no_jurnal')) {
-        Schema::table('mutasis', function (Blueprint $table) {
-            $table->string('no_jurnal')->nullable()->after('id');
-        });
-    }
-
     $request->validate([
+        'no_jurnal'   => 'required|string|max:255',
         'tanggal'     => 'required|date',
         'rekening_id' => 'required|exists:rekenings,id',
         'kategori_id' => 'required|exists:kategoris,id',
@@ -71,13 +65,8 @@ public function destroy(Mutasi $mutasi)
         $buktiPath = $request->file('bukti_foto')->store('bukti_mutasi', 'public');
     }
 
-    // GENERATE NO JURNAL OTOMATIS (Format: JRN-YYYYMMDD-001)
-    $today = date('Ymd');
-    $countToday = Mutasi::whereDate('created_at', now()->today())->count() + 1;
-    $noJurnal = 'JRN-' . $today . '-' . str_pad($countToday, 3, '0', STR_PAD_LEFT);
-
     Mutasi::create([
-        'no_jurnal'   => $noJurnal,
+        'no_jurnal'   => $request->no_jurnal,
         'tanggal'     => $request->tanggal,
         'rekening_id' => $request->rekening_id,
         'kategori_id' => $request->kategori_id,
