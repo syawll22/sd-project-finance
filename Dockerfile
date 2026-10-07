@@ -12,7 +12,7 @@ RUN sed -i 's/listen 80;/listen ${PORT};/g' /etc/nginx/sites-available/default
 
 EXPOSE 8080
 
-CMD php artisan config:cache && \
-    php artisan route:cache && \
+CMD php artisan config:clear && \
+    php artisan cache:clear && \
     php artisan storage:link --force && \
     nginx & php-fpm
