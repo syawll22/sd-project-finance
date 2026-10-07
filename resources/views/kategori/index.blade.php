@@ -51,7 +51,7 @@
                         </td>
                         <td class="px-6 py-4 text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
-                                <button @click="openEditModal = true; editData = {{ json_encode($item) }}" 
+                                <button @click="openEditModal = true; editData = { id: {{ $item->id }}, no_akun: '{{ $item->no_akun ?? $item->kode }}', nama_akun: '{{ $item->nama_akun ?? $item->nama_kategori }}' }" 
                                         class="p-2 text-slate-400 hover:text-[#D8A749] hover:bg-amber-50 rounded-xl transition" 
                                         title="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@
         </div>
     </div>
 
-    <!-- MODAL TAMBAH COA -->
+    <!-- MODAL TAMBAH COA (BERSIH DARI EDITDATA) -->
     <div x-show="openCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4" x-cloak style="display: none;">
         <div @click.away="openCreateModal = false" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-6 space-y-4">
             <h3 class="text-base font-bold text-slate-900">Tambah COA Baru</h3>
@@ -90,10 +90,12 @@
                 @csrf
                 <div>
                     <label class="block font-semibold text-slate-600 mb-1">No. Akun / Kode COA</label>
-                    <input type="text" name="no_akun" :value="editData.no_akun || editData.kode" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>                </div>
+                    <input type="text" name="no_akun" placeholder="Contoh: 101" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                </div>
                 <div>
                     <label class="block font-semibold text-slate-600 mb-1">Nama Akun</label>
-                    <input type="text" name="nama_akun" :value="editData.nama_akun || editData.nama_kategori" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>                </div>
+                    <input type="text" name="nama_akun" placeholder="Contoh: Kas Operasional" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                </div>
                 <div class="flex justify-end gap-2 pt-3">
                     <button type="button" @click="openCreateModal = false" class="px-4 py-2.5 bg-slate-100 text-slate-600 font-bold rounded-xl transition">Batal</button>
                     <button type="submit" class="px-5 py-2.5 bg-[#1C2A24] text-white font-bold rounded-xl hover:bg-[#2c3e36] transition">Simpan</button>
