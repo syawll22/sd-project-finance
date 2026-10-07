@@ -82,28 +82,29 @@
         </div>
     </div>
 
-    <!-- MODAL TAMBAH COA -->
-    <div x-show="openCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4" x-cloak style="display: none;">
-        <div @click.away="openCreateModal = false" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-6 space-y-4">
-            <h3 class="text-base font-bold text-slate-900">Tambah COA Baru</h3>
-            <form action="{{ route('kategori.store') }}" method="POST" class="space-y-3 text-xs">
-                @csrf
-                <div>
-                    <label class="block font-semibold text-slate-600 mb-1">No. Akun / Kode COA</label>
-                    <input type="text" name="no_akun" x-model="editData.no_akun" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-600 mb-1">Nama Akun</label>
-                    <input type="text" name="nama_akun" x-model="editData.nama_akun" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
-                </div>
-                <div class="flex justify-end gap-2 pt-3">
-                    <button type="button" @click="openCreateModal = false" class="px-4 py-2.5 bg-slate-100 text-slate-600 font-bold rounded-xl transition">Batal</button>
-                    <button type="submit" class="px-5 py-2.5 bg-[#1C2A24] text-white font-bold rounded-xl hover:bg-[#2c3e36] transition">Simpan</button>
-                </div>
-            </form>
-        </div>
+   <!-- MODAL TAMBAH COA -->
+<div x-show="openCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4" x-cloak style="display: none;">
+    <div @click.away="openCreateModal = false" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-6 space-y-4">
+        <h3 class="text-base font-bold text-slate-900">Tambah COA Baru</h3>
+        <form action="{{ route('kategori.store') }}" method="POST" class="space-y-3 text-xs">
+            @csrf
+            <div>
+                <label class="block font-semibold text-slate-600 mb-1">No. Akun / Kode COA</label>
+                <!-- HAPUS x-model di sini biar inputan gak kena timpa Alpine -->
+                <input type="text" name="no_akun" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+            </div>
+            <div>
+                <label class="block font-semibold text-slate-600 mb-1">Nama Akun</label>
+                <!-- HAPUS x-model di sini juga -->
+                <input type="text" name="nama_akun" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+            </div>
+            <div class="flex justify-end gap-2 pt-3">
+                <button type="button" @click="openCreateModal = false" class="px-4 py-2.5 bg-slate-100 text-slate-600 font-bold rounded-xl transition">Batal</button>
+                <button type="submit" class="px-5 py-2.5 bg-[#1C2A24] text-white font-bold rounded-xl hover:bg-[#2c3e36] transition">Simpan</button>
+            </div>
+        </form>
     </div>
-
+</div>
     <!-- MODAL EDIT COA -->
     <div x-show="openEditModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4" x-cloak style="display: none;">
         <div @click.away="openEditModal = false" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-6 space-y-4">
