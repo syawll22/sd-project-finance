@@ -3,7 +3,7 @@
 @section('title', 'Mutasi Transaksi - S&D Finance')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeFile: '', activeJurnal: '' }">
+<div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeFile: '', activeJurnal: '', hasFile: true }">
     
     <!-- Header Page -->
     <div class="flex items-center justify-between">
@@ -97,13 +97,14 @@
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
                                     @php
-                                        $fileUrl = str_starts_with($item->bukti_foto, 'storage/') || str_starts_with($item->bukti_foto, 'http') ? asset($item->bukti_foto) : asset('storage/' . $item->bukti_foto);
+                                        $cleanPath = str_replace('storage/', '', $item->bukti_foto);
+                                        $fileUrl = str_starts_with($item->bukti_foto, 'http') ? $item->bukti_foto : asset('storage/' . $cleanPath);
                                     @endphp
-                                    <button @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
+                                    <button @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; hasFile = true; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
                                         Lihat Foto
                                     </button>
                                 @else
-                                    <span class="text-slate-300">-</span>
+                                    <span class="text-slate-300 italic">No File</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
@@ -131,7 +132,7 @@
         </div>
     </div>
 
-    <!-- MODAL POP UP BUKTI PER BARIS (LANGSUNG TAMPIL) -->
+    <!-- MODAL POP UP BUKTI (MUNCUL LANGSUNG DI DALAM POP-UP) -->
     <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;">
         <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-4xl w-full p-6 relative shadow-2xl flex flex-col max-h-[92vh]">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
@@ -139,15 +140,22 @@
                 <button @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
             </div>
             
-            <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[500px]">
-                <!-- Jika format PDF, langsung render pakai embed -->
+            <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-center flex-1 overflow-hidden min-h-[500px]">
+                <!-- Jika format PDF -->
                 <template x-if="activeFile.toLowerCase().endsWith('.pdf')">
                     <embed :src="activeFile" type="application/pdf" class="w-full h-[70vh] rounded-xl bg-white">
                 </template>
 
-                <!-- Jika format Gambar (JPG, PNG, HEIC, dll), langsung tampil -->
+                <!-- Jika format Gambar -->
                 <template x-if="!activeFile.toLowerCase().endsWith('.pdf')">
-                    <img :src="activeFile" class="max-h-[70vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
+                    <div class="w-full h-full flex items-center justify-center">
+                        <img :src="activeFile" class="max-h-[70vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi" @error="hasFile = false">
+                        
+                        <!-- Kalau filenya beneran corrupt / tidak ditemukan di server -->
+                        <div x-show="!hasFile" class="text-rose-400 font-bold text-sm">
+                            No File / Berkas tidak ditemukan di server.
+                        </div>
+                    </div>
                 </template>
             </div>
         </div>
