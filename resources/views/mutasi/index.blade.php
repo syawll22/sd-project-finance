@@ -92,7 +92,7 @@
                         
                         <!-- KOLOM DEBET (UANG MASUK) -->
                         <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
-                            @if($item->tipe === 'debet')
+                            @if(($item->jenis ?? $item->tipe) === 'masuk' || ($item->jenis ?? $item->tipe) === 'debet')
                                 Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
                             @else
                                 -
@@ -101,7 +101,7 @@
 
                         <!-- KOLOM KREDIT (UANG KELUAR) -->
                         <td class="px-6 py-4 font-black text-rose-600 text-right whitespace-nowrap">
-                            @if($item->tipe === 'kredit')
+                            @if(($item->jenis ?? $item->tipe) === 'keluar' || ($item->jenis ?? $item->tipe) === 'kredit')
                                 Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
                             @else
                                 -
