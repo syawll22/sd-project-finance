@@ -116,10 +116,9 @@
     @if($item->bukti_foto)
         @php
             $cleanPath = str_replace(['public/', 'storage/'], '', $item->bukti_foto);
-            // Paksa arahkan ke folder public langsung
-            $fileUrl = asset('bukti_mutasi/' . basename($cleanPath));
+            $rawPath = 'storage/' . ltrim($cleanPath, '/');
         @endphp
-        <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
+        <button type="button" @click="activeFile = '{{ asset($rawPath) }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
             Lihat Foto
         </button>
     @else
