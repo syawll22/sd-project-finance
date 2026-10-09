@@ -132,7 +132,7 @@
         </div>
     </div>
 
-    <!-- MODAL POP UP BUKTI (MUNCUL LANGSUNG DI DALAM POP-UP) -->
+    <!-- MODAL POP UP BUKTI -->
     <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;">
         <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-4xl w-full p-6 relative shadow-2xl flex flex-col max-h-[92vh]">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
@@ -141,17 +141,13 @@
             </div>
             
             <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-center flex-1 overflow-hidden min-h-[500px]">
-                <!-- Jika format PDF -->
                 <template x-if="activeFile.toLowerCase().endsWith('.pdf')">
                     <embed :src="activeFile" type="application/pdf" class="w-full h-[70vh] rounded-xl bg-white">
                 </template>
 
-                <!-- Jika format Gambar -->
                 <template x-if="!activeFile.toLowerCase().endsWith('.pdf')">
                     <div class="w-full h-full flex items-center justify-center">
                         <img :src="activeFile" class="max-h-[70vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi" @error="hasFile = false">
-                        
-                        <!-- Kalau filenya beneran corrupt / tidak ditemukan di server -->
                         <div x-show="!hasFile" class="text-rose-400 font-bold text-sm">
                             No File / Berkas tidak ditemukan di server.
                         </div>
@@ -160,5 +156,6 @@
             </div>
         </div>
     </div>
+
 </div>
 @endsection
