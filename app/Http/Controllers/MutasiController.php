@@ -90,7 +90,7 @@ class MutasiController extends Controller
         'jenis'       => 'required|in:masuk,keluar,pindah',
         'nominal'     => 'required|numeric',
         'keterangan'  => 'nullable|string',
-        'bukti_foto'  => 'nullable|file|max:10240',
+        'bukti_foto' => 'nullable|file|image|max:10240',   
     ]);
 
     $buktiPath = $mutasi->bukti_foto;
