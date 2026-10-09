@@ -111,23 +111,23 @@
                             @endif
                         </td>
 
-<!-- TOMBOL LIHAT FOTO -->
-<td class="px-6 py-4 text-center whitespace-nowrap">
-    @if($item->bukti_foto)
-        @php
-            // Bersihin path dari awalan apapun supaya dapet nama filenya doang
-            $filename = basename($item->bukti_foto);
-            
-            // Generate beberapa kemungkinan URL sekaligus
-            $fileUrl = asset('storage/bukti_mutasi/' . $filename);
-        @endphp
-        <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
-            Lihat Foto
-        </button>
-    @else
-        <span class="text-slate-300 italic">No File</span>
-    @endif
-</td>
+                        <!-- TOMBOL LIHAT FOTO -->
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                            @if($item->bukti_foto)
+                                @php
+                                    // Bersihin path dari awalan apapun supaya dapet nama filenya doang
+                                    $filename = basename($item->bukti_foto);
+                                    
+                                    // Generate beberapa kemungkinan URL sekaligus
+                                    $fileUrl = asset('storage/bukti_mutasi/' . $filename);
+                                @endphp
+                                <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
+                                    Lihat Foto
+                                </button>
+                            @else
+                                <span class="text-slate-300 italic">No File</span>
+                            @endif
+                        </td>
                         
                         <td class="px-6 py-4 text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-2">
@@ -154,19 +154,19 @@
         </div>
     </div>
 
-<!-- MODAL POP UP GAMBAR -->
-<div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;" x-transition>
-    <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
-        <div class="flex justify-between items-center mb-4 border-b pb-3">
-            <h3 class="font-bold text-slate-800 text-base">Bukti Foto Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
-            <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
+        <!-- MODAL POP UP GAMBAR -->
+        <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;" x-transition>
+            <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
+                <div class="flex justify-between items-center mb-4 border-b pb-3">
+                    <h3 class="font-bold text-slate-800 text-base">Bukti Foto Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
+                    <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
+                </div>
+                
+                <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px]">
+                    <img :src="activeFile" @error="console.log('Gagal load:', activeFile)" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
+                </div>
+            </div>
         </div>
-        
-        <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px]">
-            <img :src="activeFile" @error="console.log('Gagal load:', activeFile)" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
-        </div>
-    </div>
-</div>
 
 </div>
 @endsection
