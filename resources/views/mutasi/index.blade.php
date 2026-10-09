@@ -64,52 +64,57 @@
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50 text-xs">
-                    @forelse($mutasis as $item)
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-6 py-4 font-bold text-slate-800 whitespace-nowrap">
-                                {{ \Carbon\Carbon::parse($item->tanggal)->format('d-M-Y') }}
-                            </td>
-                            <td class="px-6 py-4 font-mono font-bold text-slate-600">
-                                {{ $item->no_jurnal }}
-                            </td>
-                            <td class="px-6 py-4 font-semibold text-slate-700">
-                                {{ $item->rekening->nama_rekening ?? '-' }}
-                            </td>
-                            <td class="px-6 py-4 text-slate-500">
-                                {{ $item->rekening->nama_bank ?? 'Bank/Kas' }}
-                            </td>
-                            <td class="px-6 py-4 text-slate-600 max-w-xs truncate">
-                                {{ $item->keterangan ?? '-' }}
-                            </td>
-                            <td class="px-6 py-4 font-bold text-slate-800">
-                                {{ $item->kategori->no_akun ?? '-' }}
-                            </td>
-                            <td class="px-6 py-4 font-semibold text-slate-700">
-                                {{ $item->kategori->nama_akun ?? '-' }}
-                            </td>
-                            <!-- Debet (Uang Masuk) -->
-                            <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
-                                @if(($item->tipe ?? 'debet') === 'debet')
-                                    Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <!-- Kredit (Uang Keluar) -->
-                            <td class="px-6 py-4 font-black text-rose-600 text-right whitespace-nowrap">
-                                @if(($item->tipe ?? 'debet') === 'kredit')
-                                    Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-center whitespace-nowrap">
+               <!-- Di bagian Tbody Tabel -->
+            <tbody class="divide-y divide-slate-50 text-xs">
+                @forelse($mutasis as $item)
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-bold text-slate-800 whitespace-nowrap">
+                            {{ \Carbon\Carbon::parse($item->tanggal)->format('d-M-Y') }}
+                        </td>
+                        <td class="px-6 py-4 font-mono font-bold text-slate-600">
+                            {{ $item->no_jurnal }}
+                        </td>
+                        <td class="px-6 py-4 font-semibold text-slate-700">
+                            {{ $item->rekening->nama_rekening ?? '-' }}
+                        </td>
+                        <td class="px-6 py-4 text-slate-500">
+                            {{ $item->rekening->nama_bank ?? 'Bank/Kas' }}
+                        </td>
+                        <td class="px-6 py-4 text-slate-600 max-w-xs truncate">
+                            {{ $item->keterangan ?? '-' }}
+                        </td>
+                        <td class="px-6 py-4 font-bold text-slate-800">
+                            {{ $item->kategori->no_akun ?? '-' }}
+                        </td>
+                        <td class="px-6 py-4 font-semibold text-slate-700">
+                            {{ $item->kategori->nama_akun ?? '-' }}
+                        </td>
+                        
+                        <!-- KOLOM DEBET (UANG MASUK) -->
+                        <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
+                            @if($item->tipe === 'debet')
+                                Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
+                            @else
+                                -
+                            @endif
+                        </td>
+
+                        <!-- KOLOM KREDIT (UANG KELUAR) -->
+                        <td class="px-6 py-4 font-black text-rose-600 text-right whitespace-nowrap">
+                            @if($item->tipe === 'kredit')
+                                Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
+                            @else
+                                -
+                            @endif
+                        </td>
+
+                        <!-- TOMBOL BUKTI FOTO -->
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
                             @if($item->bukti_foto)
                                 @php
-                                    // Bersihin kalau ada duplikasi 'storage/' atau 'bukti_mutasi'
-                                    $filenameOnly = basename($item->bukti_foto);
-                                    $fileUrl = asset('storage/bukti_mutasi/' . $filenameOnly);
+                                    // Paksa path bersih mengarah ke storage/bukti_mutasi/nama_file
+                                    $filename = basename($item->bukti_foto);
+                                    $fileUrl = asset('storage/bukti_mutasi/' . $filename);
                                 @endphp
                                 <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
                                     Lihat Foto
@@ -117,28 +122,29 @@
                             @else
                                 <span class="text-slate-300 italic">No File</span>
                             @endif
-                            </td>
-                            <td class="px-6 py-4 text-center whitespace-nowrap">
-                                <div class="flex items-center justify-center gap-2">
-                                    <a href="{{ route('mutasi.edit', $item->id) }}" class="text-slate-400 hover:text-amber-600">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    </a>
-                                    <form action="{{ route('mutasi.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data mutasi ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-slate-400 hover:text-rose-600">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="11" class="px-6 py-8 text-center text-slate-400">Belum ada data mutasi yang cocok dengan filter.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
+                        </td>
+                        
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('mutasi.edit', $item->id) }}" class="text-slate-400 hover:text-amber-600">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                </a>
+                                <form action="{{ route('mutasi.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data mutasi ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-slate-400 hover:text-rose-600">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="11" class="px-6 py-8 text-center text-slate-400">Belum ada data mutasi yang cocok dengan filter.</td>
+                    </tr>
+                @endforelse
+            </tbody>
             </table>
         </div>
     </div>
