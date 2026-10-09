@@ -4,12 +4,12 @@
 <div class="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-sm">
     <h2 class="text-xl font-bold text-slate-800 mb-6">Tambah Mutasi Transaksi</h2>
 
-    <form action="{{ route('mutasi.update', $mutasi->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div>
             <label class="block font-semibold text-slate-600 mb-1 text-sm">No Jurnal</label>
-            <input type="text" name="no_jurnal" value="{{ ('no_jurnal') }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
+            <input type="text" name="no_jurnal" value="{{ old('no_jurnal') }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
             @error('no_jurnal') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
         </div>
 
@@ -24,7 +24,7 @@
             <select name="rekening_id" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
                 <option value="">-- Pilih Rekening --</option>
                 @foreach($rekenings as $rek)
-                    <option value="{{ $rek->id }}">{{ $rek->nama_rekening ?? $rek->bank ?? $rek->name }}</option>
+                    <option value="{{ $rek->id }}" {{ old('rekening_id') == $rek->id ? 'selected' : '' }}>{{ $rek->nama_rekening ?? $rek->bank ?? $rek->name }}</option>
                 @endforeach
             </select>
             @error('rekening_id') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
@@ -35,21 +35,24 @@
             <select name="kategori_id" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
                 <option value="">-- Pilih Kategori --</option>
                 @foreach($kategoris as $kat)
-                    <option value="{{ $kat->id }}" {{ (isset($mutasi) && $mutasi->kategori_id == $kat->id) ? 'selected' : '' }}>
+                    <option value="{{ $kat->id }}" {{ old('kategori_id') == $kat->id ? 'selected' : '' }}>
                         {{ $kat->nama_akun ?? $kat->nama_kategori ?? $kat->nama ?? $kat->name ?? 'Kategori #'.$kat->id }}
                     </option>
                 @endforeach
             </select>
             @error('kategori_id') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
         </div>
+        
         <div class="mb-4">
             <label class="block font-semibold text-slate-600 mb-2">JENIS TRANSAKSI</label>
-        <select name="jenis" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
-            <option value="masuk" {{ (old('jenis', $mutasi->jenis ?? '') == 'masuk') ? 'selected' : '' }}>Uang Masuk (Masuk)</option>
-            <option value="keluar" {{ (old('jenis', $mutasi->jenis ?? '') == 'keluar') ? 'selected' : '' }}>Uang Keluar (Keluar)</option>
-            <option value="pindah" {{ (old('jenis', $mutasi->jenis ?? '') == 'pindah') ? 'selected' : '' }}>Pindah Buku (Pindah)</option>
-        </select>
+            <select name="jenis" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                <option value="masuk" {{ old('jenis') == 'masuk' ? 'selected' : '' }}>Uang Masuk (Masuk)</option>
+                <option value="keluar" {{ old('jenis') == 'keluar' ? 'selected' : '' }}>Uang Keluar (Keluar)</option>
+                <option value="pindah" {{ old('jenis') == 'pindah' ? 'selected' : '' }}>Pindah Buku (Pindah)</option>
+            </select>
+            @error('jenis') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
         </div>
+
         <div>
             <label class="block font-semibold text-slate-600 mb-1 text-sm">Nominal (Rp)</label>
             <input type="number" name="nominal" value="{{ old('nominal') }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
