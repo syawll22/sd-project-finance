@@ -79,47 +79,48 @@ class MutasiController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $mutasi = Mutasi::findOrFail($id);
+{
+    $mutasi = Mutasi::findOrFail($id);
 
-        $request->validate([
-            'no_jurnal'   => 'required|string|max:255',
-            'tanggal'     => 'required|date',
-            'rekening_id' => 'required|exists:rekenings,id',
-            'kategori_id' => 'required|exists:kategoris,id',
-            'tipe'        => 'required|in:debet,kredit',
-            'nominal'     => 'required|numeric',
-            'keterangan'  => 'nullable|string',
-            'bukti_foto'  => 'nullable|file|image|max:10240',
-        ]);
+    $request->validate([
+        'no_jurnal'   => 'required|string|max:255',
+        'tanggal'     => 'required|date',
+        'rekening_id' => 'required|exists:rekenings,id',
+        'kategori_id' => 'required|exists:kategoris,id',
+        'jenis'       => 'required|in:masuk,keluar,pindah',
+        'nominal'     => 'required|numeric',
+        'keterangan'  => 'nullable|string',
+        'bukti_foto'  => 'nullable|file|image|max:10240',
+    ]);
 
-        $buktiPath = $mutasi->bukti_foto;
+    $buktiPath = $mutasi->bukti_foto;
 
-        if ($request->hasFile('bukti_foto')) {
-            if ($mutasi->bukti_foto) {
-                $oldPath = str_replace('storage/', '', $mutasi->bukti_foto);
-                Storage::disk('public')->delete($oldPath);
-            }
-
-            $file = $request->file('bukti_foto');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('bukti_mutasi', $filename, 'public');
-            $buktiPath = 'storage/' . $path;
+    if ($request->hasFile('bukti_foto')) {
+        // Hapus file lama jika ada
+        if ($mutasi->bukti_foto) {
+            $oldPath = str_replace('storage/', '', $mutasi->bukti_foto);
+            Storage::disk('public')->delete($oldPath);
         }
 
-        $mutasi->update([
-            'no_jurnal'   => $request->no_jurnal,
-            'tanggal'     => $request->tanggal,
-            'rekening_id' => $request->rekening_id,
-            'kategori_id' => $request->kategori_id,
-            'tipe'        => $request->tipe,
-            'nominal'     => $request->nominal,
-            'keterangan'  => $request->keterangan,
-            'bukti_foto'  => $buktiPath,
-        ]);
-
-        return redirect()->route('mutasi.index')->with('success', 'Data Mutasi berhasil diperbarui!');
+        $file = $request->file('bukti_foto');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('bukti_mutasi', $filename, 'public');
+        $buktiPath = $path; // Simpan path bersih
     }
+
+    $mutasi->update([
+        'no_jurnal'   => $request->no_jurnal,
+        'tanggal'     => $request->tanggal,
+        'rekening_id' => $request->rekening_id,
+        'kategori_id' => $request->kategori_id,
+        'jenis'       => $request->jenis,
+        'nominal'     => $request->nominal,
+        'keterangan'  => $request->keterangan,
+        'bukti_foto'  => $buktiPath,
+    ]);
+
+    return redirect()->route('mutasi.index')->with('success', 'Data Mutasi berhasil diperbarui!');
+}
 
     public function destroy($id)
     {

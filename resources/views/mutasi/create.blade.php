@@ -6,6 +6,7 @@
 
     <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
+        @method('PUT')
 
         <div>
             <label class="block font-semibold text-slate-600 mb-1 text-sm">No Jurnal</label>
