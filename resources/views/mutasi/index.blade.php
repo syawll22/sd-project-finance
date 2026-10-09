@@ -115,12 +115,11 @@
 <td class="px-6 py-4 text-center whitespace-nowrap">
     @if($item->bukti_foto)
         @php
-            $cleanPath = str_replace(['public/', 'storage/'], '', $item->bukti_foto);
-            $fileUrl = asset('storage/' . $cleanPath);
-        @endphp
-        <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
-            Lihat Foto
-        </button>
+    $fileUrl = asset($item->bukti_foto);
+@endphp
+<button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="...">
+    Lihat Foto
+</button>
     @else
         <span class="text-slate-300 italic">No File</span>
     @endif
