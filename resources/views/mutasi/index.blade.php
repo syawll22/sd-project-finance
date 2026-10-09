@@ -111,7 +111,7 @@
                             @endif
                         </td>
 
-                        <!-- TOMBOL LIHAT FOTO -->
+<!-- TOMBOL LIHAT FOTO -->
 <td class="px-6 py-4 text-center whitespace-nowrap">
     @if($item->bukti_foto)
         @php
