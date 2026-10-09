@@ -151,19 +151,21 @@
         </div>
     </div>
 
-    <!-- MODAL POP UP GAMBAR -->
-    <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;" x-transition>
-        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b pb-3">
-                <h3 class="font-bold text-slate-800 text-base">Bukti Foto Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
-                <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
-            </div>
-            
-            <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px]">
-                <img :src="activeFile" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
+        <!-- MODAL POP UP GAMBAR -->
+        <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;" x-transition>
+            <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
+                <div class="flex justify-between items-center mb-4 border-b pb-3">
+                    <h3 class="font-bold text-slate-800 text-base">Bukti Foto Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
+                    <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
+                </div>
+                
+                <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px] flex-col gap-2">
+                    <img :src="activeFile" class="max-h-[60vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
+                    <!-- CEK LINK URL ASLI DI SINI -->
+                    <a :href="activeFile" target="_blank" class="text-[11px] text-amber-400 underline truncate max-w-full" x-text="activeFile"></a>
+                </div>
             </div>
         </div>
-    </div>
 
 </div>
 @endsection
