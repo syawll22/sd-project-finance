@@ -58,8 +58,8 @@
                         <th class="px-6 py-4">Keterangan</th>
                         <th class="px-6 py-4">No. COA</th>
                         <th class="px-6 py-4">Nama COA</th>
-                        <th class="px-6 py-4 text-right">Debet</th>
-                        <th class="px-6 py-4 text-right">Kredit</th>
+                        <th class="px-6 py-4 text-right">Debet (Masuk)</th>
+                        <th class="px-6 py-4 text-right">Kredit (Keluar)</th>
                         <th class="px-6 py-4 text-center">Bukti</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
@@ -88,17 +88,27 @@
                             <td class="px-6 py-4 font-semibold text-slate-700">
                                 {{ $item->kategori->nama_akun ?? '-' }}
                             </td>
+                            <!-- Debet (Uang Masuk) -->
                             <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
-                                Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
+                                @if(($item->tipe ?? 'debet') === 'debet')
+                                    Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
+                                @else
+                                    -
+                                @endif
                             </td>
-                            <td class="px-6 py-4 text-right text-slate-400 whitespace-nowrap">
-                                -
+                            <!-- Kredit (Uang Keluar) -->
+                            <td class="px-6 py-4 font-black text-rose-600 text-right whitespace-nowrap">
+                                @if(($item->tipe ?? 'debet') === 'kredit')
+                                    Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
+                                @else
+                                    -
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
                                     @php
                                         $cleanPath = str_replace('storage/', '', $item->bukti_foto);
-                                        $fileUrl = str_starts_with($item->bukti_foto, 'http') ? $item->bukti_foto : asset('storage/' . $cleanPath);
+                                        $fileUrl = asset('storage/' . $cleanPath);
                                     @endphp
                                     <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
                                         Lihat Foto
@@ -132,7 +142,7 @@
         </div>
     </div>
 
-    <!-- MODAL POP-UP BUKTI FOTO (MUNCUL DI TENGAH LAYAR) -->
+    <!-- MODAL POP UP GAMBAR (YANG BENER & TIDAK BROKEN) -->
     <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;">
         <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4 border-b pb-3">

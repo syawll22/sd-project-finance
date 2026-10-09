@@ -45,6 +45,14 @@
                 </select>
             @error('kategori_id') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
         </div>
+      
+        <div>
+            <label class="block font-semibold text-slate-600 mb-2">TIPE TRANSAKSI (UANG MASUK / KELUAR)</label>
+            <select name="tipe" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                <option value="debet" {{ (old('tipe', $mutasi->tipe ?? '') == 'debet') ? 'selected' : '' }}>Uang Masuk (Debet)</option>
+                <option value="kredit" {{ (old('tipe', $mutasi->tipe ?? '') == 'kredit') ? 'selected' : '' }}>Uang Keluar (Kredit)</option>
+            </select>
+        </div>
 
         <div>
             <label class="block font-semibold text-slate-600 mb-1 text-sm">Nominal (Rp)</label>

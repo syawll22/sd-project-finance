@@ -14,12 +14,10 @@ class MutasiController extends Controller
     {
         $query = Mutasi::with(['rekening', 'kategori']);
 
-        // Filter Berdasarkan Rekening / Bank
         if ($request->filled('rekening_id')) {
             $query->where('rekening_id', $request->rekening_id);
         }
 
-        // Filter Berdasarkan Bulan (Format: YYYY-MM)
         if ($request->filled('bulan')) {
             $query->whereRaw("DATE_FORMAT(tanggal, '%Y-%m') = ?", [$request->bulan]);
         }
@@ -44,16 +42,16 @@ class MutasiController extends Controller
             'tanggal'     => 'required|date',
             'rekening_id' => 'required|exists:rekenings,id',
             'kategori_id' => 'required|exists:kategoris,id',
+            'tipe'        => 'required|in:debet,kredit', // uang masuk / keluar
             'nominal'     => 'required|numeric',
             'keterangan'  => 'nullable|string',
-            'bukti_foto'  => 'nullable|file|image|max:10240', // Khusus gambar max 10MB
+            'bukti_foto'  => 'nullable|file|image|max:10240',
         ]);
 
         $buktiPath = null;
         if ($request->hasFile('bukti_foto')) {
             $file = $request->file('bukti_foto');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            // Simpan ke storage/app/public/bukti_mutasi
             $path = $file->storeAs('bukti_mutasi', $filename, 'public');
             $buktiPath = 'storage/' . $path;
         }
@@ -63,6 +61,7 @@ class MutasiController extends Controller
             'tanggal'     => $request->tanggal,
             'rekening_id' => $request->rekening_id,
             'kategori_id' => $request->kategori_id,
+            'tipe'        => $request->tipe, // debet / kredit
             'nominal'     => $request->nominal,
             'keterangan'  => $request->keterangan,
             'bukti_foto'  => $buktiPath,
@@ -88,6 +87,7 @@ class MutasiController extends Controller
             'tanggal'     => 'required|date',
             'rekening_id' => 'required|exists:rekenings,id',
             'kategori_id' => 'required|exists:kategoris,id',
+            'tipe'        => 'required|in:debet,kredit',
             'nominal'     => 'required|numeric',
             'keterangan'  => 'nullable|string',
             'bukti_foto'  => 'nullable|file|image|max:10240',
@@ -96,7 +96,6 @@ class MutasiController extends Controller
         $buktiPath = $mutasi->bukti_foto;
 
         if ($request->hasFile('bukti_foto')) {
-            // Hapus file lama jika ada
             if ($mutasi->bukti_foto) {
                 $oldPath = str_replace('storage/', '', $mutasi->bukti_foto);
                 Storage::disk('public')->delete($oldPath);
@@ -113,6 +112,7 @@ class MutasiController extends Controller
             'tanggal'     => $request->tanggal,
             'rekening_id' => $request->rekening_id,
             'kategori_id' => $request->kategori_id,
+            'tipe'        => $request->tipe,
             'nominal'     => $request->nominal,
             'keterangan'  => $request->keterangan,
             'bukti_foto'  => $buktiPath,
@@ -125,7 +125,6 @@ class MutasiController extends Controller
     {
         $mutasi = Mutasi::findOrFail($id);
 
-        // Hapus file fisik di storage jika ada
         if ($mutasi->bukti_foto) {
             $oldPath = str_replace('storage/', '', $mutasi->bukti_foto);
             Storage::disk('public')->delete($oldPath);
