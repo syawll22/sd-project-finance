@@ -95,15 +95,17 @@
                                 -
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
-                                @if($item->bukti_foto)
+                               @if($item->bukti_foto)
                                     @php
                                         $cleanPath = str_replace('storage/', '', $item->bukti_foto);
                                         $fileUrl = str_starts_with($item->bukti_foto, 'http') ? $item->bukti_foto : asset('storage/' . $cleanPath);
                                     @endphp
-                                    <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
+                                    <a href="{{ $fileUrl }}" target="_blank" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition inline-block">
                                         Lihat Foto
-                                    </button>
+                                    </a>
                                 @else
+                                    <span class="text-slate-300 italic">No File</span>
+                                @endif
                                     <span class="text-slate-300 italic">No File</span>
                                 @endif
                             </td>
