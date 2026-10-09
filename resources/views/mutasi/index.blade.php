@@ -3,7 +3,7 @@
 @section('title', 'Mutasi Transaksi - S&D Finance')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeFile: '', activeJurnal: '' }">
+<div class="max-w-7xl mx-auto space-y-6 text-xs">
     
     <!-- Header Page -->
     <div class="flex items-center justify-between">
@@ -95,7 +95,7 @@
                                 -
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
-                               @if($item->bukti_foto)
+                                @if($item->bukti_foto)
                                     @php
                                         $cleanPath = str_replace('storage/', '', $item->bukti_foto);
                                         $fileUrl = str_starts_with($item->bukti_foto, 'http') ? $item->bukti_foto : asset('storage/' . $cleanPath);
@@ -104,8 +104,6 @@
                                         Lihat Foto
                                     </a>
                                 @else
-                                    <span class="text-slate-300 italic">No File</span>
-                                @endif
                                     <span class="text-slate-300 italic">No File</span>
                                 @endif
                             </td>
@@ -133,20 +131,5 @@
             </table>
         </div>
     </div>
-
-    <!-- MODAL POP UP GAMBAR -->
-    <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;">
-        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b pb-3">
-                <h3 class="font-bold text-slate-800 text-base">Bukti Foto Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
-                <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
-            </div>
-            
-            <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px]">
-                <img :src="activeFile" class="max-h-[70vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
-            </div>
-        </div>
-    </div>
-
 </div>
 @endsection
