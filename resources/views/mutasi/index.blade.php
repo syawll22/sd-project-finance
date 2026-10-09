@@ -89,7 +89,7 @@
                                 {{ $item->kategori->nama_akun ?? '-' }}
                             </td>
                             
-                            <!-- KOLOM DEBET (UANG MASUK) -->
+                            <!-- KOLOM DEBET -->
                             <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
                                 @if($item->jenis === 'masuk')
                                     Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
@@ -98,7 +98,7 @@
                                 @endif
                             </td>
 
-                            <!-- KOLOM KREDIT (UANG KELUAR / PINDAH) -->
+                            <!-- KOLOM KREDIT -->
                             <td class="px-6 py-4 font-black text-rose-600 text-right whitespace-nowrap">
                                 @if($item->jenis === 'keluar' || $item->jenis === 'pindah')
                                     Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
@@ -110,7 +110,7 @@
                                 @endif
                             </td>
 
-                            <!-- TOMBOL LIHAT FOTO -->
+                            <!-- TOMBOL BUKTI FOTO -->
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
                                     @php
@@ -160,7 +160,7 @@
             </div>
             
             <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px]">
-                <img :src="activeFile" @error="console.log('Gagal load:', activeFile)" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
+                <img :src="activeFile" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
             </div>
         </div>
     </div>
