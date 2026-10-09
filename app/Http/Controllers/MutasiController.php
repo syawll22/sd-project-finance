@@ -42,7 +42,7 @@ class MutasiController extends Controller
         'tanggal'     => 'required|date',
         'rekening_id' => 'required|exists:rekenings,id',
         'kategori_id' => 'required|exists:kategoris,id',
-        'jenis'       => 'required|in:masuk,keluar,pindah', // Sesuaikan dengan kolom enum database
+        'jenis'       => 'required|in:masuk,keluar,pindah',
         'nominal'     => 'required|numeric',
         'keterangan'  => 'nullable|string',
         'bukti_foto'  => 'nullable|file|image|max:10240',
@@ -50,21 +50,18 @@ class MutasiController extends Controller
 
     $buktiPath = null;
     if ($request->hasFile('bukti_foto')) {
-            $file = $request->file('bukti_foto');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            
-            // Simpan langsung ke public folder secara fisik
-            $file->move(public_path('bukti_mutasi'), $filename);
-            
-            $buktiPath = 'bukti_mutasi/' . $filename;
-        }
+        $file = $request->file('bukti_foto');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $buktiPath = $file->storeAs('bukti_mutasi', $filename, 'public');
+    }
 
     Mutasi::create([
         'no_jurnal'   => $request->no_jurnal,
         'tanggal'     => $request->tanggal,
         'rekening_id' => $request->rekening_id,
         'kategori_id' => $request->kategori_id,
-        'jenis'       => $request->jenis, // masuk / keluar / pindah
+        'jenis'       => $request->jenis,
         'nominal'     => $request->nominal,
         'keterangan'  => $request->keterangan,
         'bukti_foto'  => $buktiPath,
@@ -93,20 +90,20 @@ class MutasiController extends Controller
         'jenis'       => 'required|in:masuk,keluar,pindah',
         'nominal'     => 'required|numeric',
         'keterangan'  => 'nullable|string',
-        'bukti_foto' => 'nullable|file |max:10240',   
+        'bukti_foto'  => 'nullable|file|max:10240',
     ]);
 
     $buktiPath = $mutasi->bukti_foto;
 
     if ($request->hasFile('bukti_foto')) {
-            $file = $request->file('bukti_foto');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            
-            // Simpan langsung ke public folder secara fisik
-            $file->move(public_path('bukti_mutasi'), $filename);
-            
-            $buktiPath = 'bukti_mutasi/' . $filename;
+        if ($mutasi->bukti_foto) {
+            Storage::disk('public')->delete($mutasi->bukti_foto);
         }
+
+        $file = $request->file('bukti_foto');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $buktiPath = $file->storeAs('bukti_mutasi', $filename, 'public');
+    }
 
     $mutasi->update([
         'no_jurnal'   => $request->no_jurnal,
@@ -127,7 +124,7 @@ class MutasiController extends Controller
         $mutasi = Mutasi::findOrFail($id);
 
         if ($mutasi->bukti_foto) {
-            $oldPath = str_replace('storage/', '', $mutasi->bukti_foto);
+            $oldPath = str_replace(['public/', 'storage/'], '', $mutasi->bukti_foto);
             Storage::disk('public')->delete($oldPath);
         }
 

@@ -70,7 +70,12 @@
         <div>
             <label class="block font-semibold text-slate-600 mb-1 text-sm">Ganti Bukti Transaksi (Opsional)</label>
             @if($mutasi->bukti_foto)
-                <div class="mb-2 text-xs text-slate-500">File saat ini: <a href="{{ asset($mutasi->bukti_foto) }}" target="_blank" class="text-amber-600 underline font-semibold">Lihat File</a></div>
+                @php
+                    $currentFileUrl = file_exists(public_path($mutasi->bukti_foto))
+                        ? asset($mutasi->bukti_foto)
+                        : asset('storage/' . ltrim($mutasi->bukti_foto, '/'));
+                @endphp
+                <div class="mb-2 text-xs text-slate-500">File saat ini: <a href="{{ $currentFileUrl }}" target="_blank" class="text-amber-600 underline font-semibold">Lihat File</a></div>
             @endif
             <input type="file" name="bukti_foto" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
             @error('bukti_foto') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror

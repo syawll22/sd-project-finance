@@ -115,11 +115,13 @@
 <td class="px-6 py-4 text-center whitespace-nowrap">
     @if($item->bukti_foto)
         @php
-    $fileUrl = asset($item->bukti_foto);
-@endphp
-<button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="...">
-    Lihat Foto
-</button>
+            $fileUrl = file_exists(public_path($item->bukti_foto))
+                ? asset($item->bukti_foto)
+                : asset('storage/' . ltrim($item->bukti_foto, '/'));
+        @endphp
+        <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-3 py-1.5 rounded-lg border border-amber-200 bg-amber-50 text-amber-700 font-semibold hover:bg-amber-100 transition">
+            Lihat Foto
+        </button>
     @else
         <span class="text-slate-300 italic">No File</span>
     @endif
