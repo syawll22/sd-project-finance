@@ -3,7 +3,7 @@
 @section('title', 'Mutasi Transaksi - S&D Finance')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeFile: '', activeJurnal: '', hasFile: true }">
+<div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeFile: '', activeJurnal: '' }">
     
     <!-- Header Page -->
     <div class="flex items-center justify-between">
@@ -100,8 +100,8 @@
                                         $cleanPath = str_replace('storage/', '', $item->bukti_foto);
                                         $fileUrl = str_starts_with($item->bukti_foto, 'http') ? $item->bukti_foto : asset('storage/' . $cleanPath);
                                     @endphp
-                                    <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; hasFile = true; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
-                                        Lihat Berkas
+                                    <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
+                                        Lihat Foto
                                     </button>
                                 @else
                                     <span class="text-slate-300 italic">No File</span>
@@ -132,32 +132,19 @@
         </div>
     </div>
 
-    <!-- MODAL POP UP BUKTI (MUNCUL LANGSUNG DI DALAM HALAMAN TANPA PINDAH TAB) -->
+    <!-- MODAL POP UP GAMBAR -->
     <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;">
-        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-4xl w-full p-6 relative shadow-2xl flex flex-col max-h-[92vh]">
+        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
-                <h3 class="font-bold text-slate-800 text-base">Bukti Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
+                <h3 class="font-bold text-slate-800 text-base">Bukti Foto Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
                 <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
             </div>
             
-            <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-center flex-1 overflow-hidden min-h-[500px]">
-                <!-- Jika format PDF -->
-                <template x-if="activeFile.toLowerCase().endsWith('.pdf')">
-                    <embed :src="activeFile" type="application/pdf" class="w-full h-[70vh] rounded-xl bg-white">
-                </template>
-
-                <!-- Jika format Gambar -->
-                <template x-if="!activeFile.toLowerCase().endsWith('.pdf')">
-                    <div class="w-full h-full flex items-center justify-center">
-                        <img :src="activeFile" class="max-h-[70vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi" @error="hasFile = false">
-                        
-                        <div x-show="!hasFile" class="text-rose-400 font-bold text-sm">
-                            No File / Berkas tidak ditemukan di server.
-                        </div>
-                    </div>
-                </template>
+            <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px]">
+                <img :src="activeFile" class="max-h-[70vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
             </div>
         </div>
     </div>
+
 </div>
 @endsection
