@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'S&D Finance')</title>
+    {{-- <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"> --}}
  <!-- PWA Settings -->
 <link rel="manifest" href="{{ asset('manifest.json') }}">
 <meta name="theme-color" content="#0F172A">
@@ -45,7 +46,7 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #e8ece9;
         }
-        /* Style melengkung khusus menu aktif Desktop (lg: 1024px ke atas) */
+       /* style untuk menu aktif */
         @media (min-width: 1024px) {
             .nav-active {
                 background-color: #e8ece9;
@@ -76,7 +77,7 @@
                 box-shadow: 5px -5px 0 5px #e8ece9;
             }
         }
-        /* Style active menu versi Mobile Drawer */
+        /* Style active menu versi Mobile */
         @media (max-width: 1023px) {
             .nav-active {
                 background-color: #d4a338;
@@ -117,7 +118,7 @@
         <!-- CONTAINER UTAMA -->
         <div class="w-full bg-bgMain rounded-2xl lg:rounded-[2.5rem] lg:shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[85vh]">
 
-            <!-- SIDEBAR DESKTOP (Tampil normal di layar gede) -->
+            <!-- SIDEBAR DESKTOP (Tampil normal di laptop/komputer) -->
             <aside class="hidden lg:flex w-64 bg-sidebar flex-col justify-between p-6 pr-0 rounded-l-[2.5rem] text-white shrink-0">
                 <div>
                     <nav class="space-y-2 mt-4 text-xs font-semibold tracking-wider text-slate-300">

@@ -4,9 +4,9 @@
 <div class="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-sm">
     <h2 class="text-xl font-bold text-slate-800 mb-6">Edit Mutasi Transaksi</h2>
 
-    <form action="{{ route('mutasi.update', $mutasi->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-        @csrf
-        @method('PUT')
+        <form action="{{ route('mutasi.update', $mutasi->id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
         <div>
             <label class="block font-semibold text-slate-600 mb-1 text-sm">No Jurnal</label>
