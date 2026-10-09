@@ -115,8 +115,11 @@
 <td class="px-6 py-4 text-center whitespace-nowrap">
     @if($item->bukti_foto)
         @php
-            $cleanPath = str_replace(['public/', 'storage/'], '', $item->bukti_foto);
-            $fileUrl = asset('storage/' . ltrim($cleanPath, '/'));
+            // Bersihin path dari awalan apapun supaya dapet nama filenya doang
+            $filename = basename($item->bukti_foto);
+            
+            // Generate beberapa kemungkinan URL sekaligus
+            $fileUrl = asset('storage/bukti_mutasi/' . $filename);
         @endphp
         <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
             Lihat Foto
@@ -160,7 +163,7 @@
         </div>
         
         <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px]">
-            <img :src="activeFile" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
+            <img :src="activeFile" @error="console.log('Gagal load:', activeFile)" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
         </div>
     </div>
 </div>
