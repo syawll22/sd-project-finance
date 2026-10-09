@@ -40,18 +40,27 @@ class KategoriController extends Controller
             });
         }
 
-        // VALIDASI & SIMPAN
+        // VALIDASI
         $request->validate([
             'no_akun'   => 'required',
             'nama_akun' => 'required',
         ]);
 
-        Kategori::create([
-            'no_akun'   => $request->no_akun,
-            'nama_akun' => $request->nama_akun,
-        ]);
+        // TAMBAHKAN TRY-CATCH DI SINI
+        try {
+            Kategori::create([
+                'no_akun'   => $request->no_akun,
+                'nama_akun' => $request->nama_akun,
+            ]);
 
-        return redirect()->back()->with('success', 'Kategori berhasil ditambahkan!');
+            return redirect()->back()->with('success', 'Kategori berhasil ditambahkan!');
+
+        } catch (\Exception $e) {
+            // Kalau database nolak karena no_akun double / duplikat
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'No Akun tersebut sudah terdaftar, silakan gunakan yang lain!');
+        }
     }
 
     public function update(Request $request, $id)
@@ -62,13 +71,23 @@ class KategoriController extends Controller
         ]);
 
         $kategori = Kategori::findOrFail($id);
-        $kategori->update([
-            'no_akun'   => $request->no_akun,
-            'nama_akun' => $request->nama_akun,
-        ]);
 
-        return redirect()->back()->with('success', 'Kategori berhasil diperbarui!');
+        // TAMBAHKAN TRY-CATCH JUGA DI UPDATE (OPSIONAL TAPI AMAN)
+        try {
+            $kategori->update([
+                'no_akun'   => $request->no_akun,
+                'nama_akun' => $request->nama_akun,
+            ]);
+
+            return redirect()->back()->with('success', 'Kategori berhasil diperbarui!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Anjir, gagal update karena No Akun kembar dengan data lain!');
+        }
     }
+    
 
     public function destroy($id)
     {
