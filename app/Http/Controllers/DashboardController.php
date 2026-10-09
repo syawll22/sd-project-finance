@@ -10,60 +10,25 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     public function index()
-    {
-        // 1. Total Saldo Semua Rekening
-        $totalSaldo = Rekening::sum('saldo') ?? 0;
-        $rekenings = Rekening::all();
+{
+    // Total Pemasukan (Jenis = 'masuk')
+    $pemasukanBulanIni = Mutasi::where('jenis', 'masuk')
+        ->whereMonth('tanggal', date('m'))
+        ->whereYear('tanggal', date('Y'))
+        ->sum('nominal');
 
-        // 2. Total Pemasukan & Pengeluaran Bulan Ini
-        $pemasukanBulanIni = Mutasi::where('jenis', 'masuk')
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('nominal') ?? 0;
+    // Total Pengeluaran (Jenis = 'keluar' atau 'pindah')
+    $pengeluaranBulanIni = Mutasi::whereIn('jenis', ['keluar', 'pindah'])
+        ->whereMonth('tanggal', date('m'))
+        ->whereYear('tanggal', date('Y'))
+        ->sum('nominal');
 
-        $pengeluaranBulanIni = Mutasi::where('jenis', 'keluar')
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('nominal') ?? 0;
+    // Transaksi Terakhir
+    $transaksiTerakhir = Mutasi::with(['rekening', 'kategori'])
+        ->latest('tanggal')
+        ->take(5)
+        ->get();
 
-        $netCashflow = $pemasukanBulanIni - $pengeluaranBulanIni;
-
-        // 3. 5 Transaksi Terakhir
-        $latestMutasi = Mutasi::with(['rekening', 'kategori'])
-            ->latest()
-            ->take(5)
-            ->get();
-
-        // 4. Data Chart (6 Bulan Terakhir)
-        $chartLabels = [];
-        $chartMasuk = [];
-        $chartKeluar = [];
-
-        for ($i = 5; $i >= 0; $i--) {
-            $month = now()->subMonths($i);
-            $chartLabels[] = $month->translatedFormat('F Y');
-
-            $chartMasuk[] = Mutasi::where('jenis', 'masuk')
-                ->whereMonth('created_at', $month->month)
-                ->whereYear('created_at', $month->year)
-                ->sum('nominal') ?? 0;
-
-            $chartKeluar[] = Mutasi::where('jenis', 'keluar')
-                ->whereMonth('created_at', $month->month)
-                ->whereYear('created_at', $month->year)
-                ->sum('nominal') ?? 0;
-        }
-
-        return view('dashboard', compact(
-            'totalSaldo',
-            'rekenings',
-            'pemasukanBulanIni',
-            'pengeluaranBulanIni',
-            'netCashflow',
-            'latestMutasi',
-            'chartLabels',
-            'chartMasuk',
-            'chartKeluar'
-        ));
-    }
+    return view('dashboard', compact('pemasukanBulanIni', 'pengeluaranBulanIni', 'transaksiTerakhir'));
+}
 }

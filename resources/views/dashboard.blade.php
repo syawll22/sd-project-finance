@@ -77,8 +77,8 @@
                             <td class="py-2.5 sm:py-3 text-slate-500">
                                 {{ $item->kategori->nama_kategori ?? 'Umum' }}
                             </td>
-                            <td class="py-2.5 sm:py-3 font-bold text-right {{ $item->tipe == 'masuk' ? 'text-emerald-600' : 'text-rose-600' }}">
-                                {{ $item->tipe == 'masuk' ? '+' : '-' }} Rp {{ number_format($item->nominal, 0, ',', '.') }}
+                            <td class="py-2.5 sm:py-3 font-bold text-right {{ $item->jenis == 'masuk' ? 'text-emerald-600' : 'text-rose-600' }}">
+                                {{ $item->jenis == 'masuk' ? '+' : '-' }} Rp {{ number_format($item->nominal, 0, ',', '.') }}
                             </td>
                         </tr>
                         @empty
