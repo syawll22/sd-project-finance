@@ -47,10 +47,11 @@
         </div>
       
         <div class="mb-4">
-            <label class="block font-semibold text-slate-600 mb-2">TIPE TRANSAKSI</label>
-            <select name="tipe" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
-                <option value="debet" {{ (old('tipe', $mutasi->tipe ?? '') == 'debet') ? 'selected' : '' }}>Uang Masuk (Debet)</option>
-                <option value="kredit" {{ (old('tipe', $mutasi->tipe ?? '') == 'kredit') ? 'selected' : '' }}>Uang Keluar (Kredit)</option>
+            <label class="block font-semibold text-slate-600 mb-2">JENIS TRANSAKSI</label>
+            <select name="jenis" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                <option value="masuk" {{ (old('jenis', $mutasi->jenis ?? '') == 'masuk') ? 'selected' : '' }}>Uang Masuk (Masuk)</option>
+                <option value="keluar" {{ (old('jenis', $mutasi->jenis ?? '') == 'keluar') ? 'selected' : '' }}>Uang Keluar (Keluar)</option>
+                <option value="pindah" {{ (old('jenis', $mutasi->jenis ?? '') == 'pindah') ? 'selected' : '' }}>Pindah Buku (Pindah)</option>
             </select>
         </div>
 

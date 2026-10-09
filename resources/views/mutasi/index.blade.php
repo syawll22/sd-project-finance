@@ -90,31 +90,33 @@
                             {{ $item->kategori->nama_akun ?? '-' }}
                         </td>
                         
-                        <!-- KOLOM DEBET (UANG MASUK) -->
+                       <!-- KOLOM DEBET (UANG MASUK) -->
                         <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
-                            @if(($item->jenis ?? $item->tipe) === 'masuk' || ($item->jenis ?? $item->tipe) === 'debet')
+                            @if($item->jenis === 'masuk')
                                 Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
                             @else
                                 -
                             @endif
                         </td>
 
-                        <!-- KOLOM KREDIT (UANG KELUAR) -->
+                        <!-- KOLOM KREDIT (UANG KELUAR / PINDAH) -->
                         <td class="px-6 py-4 font-black text-rose-600 text-right whitespace-nowrap">
-                            @if(($item->jenis ?? $item->tipe) === 'keluar' || ($item->jenis ?? $item->tipe) === 'kredit')
+                            @if($item->jenis === 'keluar' || $item->jenis === 'pindah')
                                 Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
+                                @if($item->jenis === 'pindah')
+                                    <span class="text-[9px] text-slate-400 block font-normal">(Pindah)</span>
+                                @endif
                             @else
                                 -
                             @endif
                         </td>
 
-                        <!-- TOMBOL BUKTI FOTO -->
+                        <!-- BUKTI FOTO -->
                         <td class="px-6 py-4 text-center whitespace-nowrap">
                             @if($item->bukti_foto)
                                 @php
-                                    // Paksa path bersih mengarah ke storage/bukti_mutasi/nama_file
-                                    $filename = basename($item->bukti_foto);
-                                    $fileUrl = asset('storage/bukti_mutasi/' . $filename);
+                                    $cleanPath = str_replace('storage/', '', $item->bukti_foto);
+                                    $fileUrl = asset('storage/' . $cleanPath);
                                 @endphp
                                 <button type="button" @click="activeFile = '{{ $fileUrl }}'; activeJurnal = '{{ $item->no_jurnal }}'; modalOpen = true" class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition">
                                     Lihat Foto

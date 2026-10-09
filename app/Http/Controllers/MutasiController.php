@@ -36,39 +36,39 @@ class MutasiController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'no_jurnal'   => 'required|string|max:255',
-            'tanggal'     => 'required|date',
-            'rekening_id' => 'required|exists:rekenings,id',
-            'kategori_id' => 'required|exists:kategoris,id',
-            'tipe'        => 'required|in:debet,kredit', // uang masuk / keluar
-            'nominal'     => 'required|numeric',
-            'keterangan'  => 'nullable|string',
-            'bukti_foto'  => 'nullable|file|image|max:10240',
-        ]);
+{
+    $request->validate([
+        'no_jurnal'   => 'required|string|max:255',
+        'tanggal'     => 'required|date',
+        'rekening_id' => 'required|exists:rekenings,id',
+        'kategori_id' => 'required|exists:kategoris,id',
+        'jenis'       => 'required|in:masuk,keluar,pindah', // Sesuaikan dengan kolom enum database
+        'nominal'     => 'required|numeric',
+        'keterangan'  => 'nullable|string',
+        'bukti_foto'  => 'nullable|file|image|max:10240',
+    ]);
 
-        $buktiPath = null;
-        if ($request->hasFile('bukti_foto')) {
-            $file = $request->file('bukti_foto');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('bukti_mutasi', $filename, 'public');
-            $buktiPath = 'storage/' . $path;
-        }
-
-        Mutasi::create([
-            'no_jurnal'   => $request->no_jurnal,
-            'tanggal'     => $request->tanggal,
-            'rekening_id' => $request->rekening_id,
-            'kategori_id' => $request->kategori_id,
-            'tipe'        => $request->tipe, // debet / kredit
-            'nominal'     => $request->nominal,
-            'keterangan'  => $request->keterangan,
-            'bukti_foto'  => $buktiPath,
-        ]);
-
-        return redirect()->route('mutasi.index')->with('success', 'Data Mutasi berhasil ditambahkan!');
+    $buktiPath = null;
+    if ($request->hasFile('bukti_foto')) {
+        $file = $request->file('bukti_foto');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('bukti_mutasi', $filename, 'public');
+        $buktiPath = $path; // Simpan path relatif bersih tanpa dobel 'storage/'
     }
+
+    Mutasi::create([
+        'no_jurnal'   => $request->no_jurnal,
+        'tanggal'     => $request->tanggal,
+        'rekening_id' => $request->rekening_id,
+        'kategori_id' => $request->kategori_id,
+        'jenis'       => $request->jenis, // masuk / keluar / pindah
+        'nominal'     => $request->nominal,
+        'keterangan'  => $request->keterangan,
+        'bukti_foto'  => $buktiPath,
+    ]);
+
+    return redirect()->route('mutasi.index')->with('success', 'Data Mutasi berhasil ditambahkan!');
+}
 
     public function edit($id)
     {
