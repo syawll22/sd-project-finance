@@ -9,7 +9,7 @@
 
         <div>
             <label class="block font-semibold text-slate-600 mb-1 text-sm">No Jurnal</label>
-            <input type="text" name="no_jurnal" value="{{ old('no_jurnal') }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
+            <input type="text" name="no_jurnal" value="{{ ('no_jurnal') }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
             @error('no_jurnal') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
         </div>
 
