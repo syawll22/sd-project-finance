@@ -95,18 +95,15 @@ class MutasiController extends Controller
 
     $buktiPath = $mutasi->bukti_foto;
 
-    if ($request->hasFile('bukti_foto')) {
-        // Hapus file lama jika ada
-        if ($mutasi->bukti_foto) {
-            $oldPath = str_replace('storage/', '', $mutasi->bukti_foto);
-            Storage::disk('public')->delete($oldPath);
-        }
-
-        $file = $request->file('bukti_foto');
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('bukti_mutasi', $filename, 'public');
-        $buktiPath = $path; // Simpan path bersih
-    }
+   if ($request->hasFile('bukti_foto')) {
+    $file = $request->file('bukti_foto');
+    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+    // Simpan ke storage/app/public/bukti_mutasi
+    $path = $file->storeAs('bukti_mutasi', $filename, 'public'); 
+    
+    // Simpan string path persis seperti ini ke database
+    $buktiPath = 'storage/' . $path; // Hasilnya: storage/bukti_mutasi/filename.jpg
+}
 
     $mutasi->update([
         'no_jurnal'   => $request->no_jurnal,
