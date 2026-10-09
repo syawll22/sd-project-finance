@@ -5,7 +5,6 @@
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeFile: '', activeJurnal: '' }">
     
-    <!-- Header Page -->
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight">Mutasi Transaksi</h1>
@@ -16,7 +15,6 @@
         </a>
     </div>
 
-    <!-- Filter Card -->
     <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100">
         <form method="GET" action="{{ route('mutasi.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div>
@@ -45,7 +43,6 @@
         </form>
     </div>
 
-    <!-- Table Card -->
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -89,7 +86,6 @@
                                 {{ $item->kategori->nama_akun ?? '-' }}
                             </td>
                             
-                            <!-- KOLOM DEBET -->
                             <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
                                 @if($item->jenis === 'masuk')
                                     Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
@@ -98,7 +94,6 @@
                                 @endif
                             </td>
 
-                            <!-- KOLOM KREDIT -->
                             <td class="px-6 py-4 font-black text-rose-600 text-right whitespace-nowrap">
                                 @if($item->jenis === 'keluar' || $item->jenis === 'pindah')
                                     Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
@@ -110,8 +105,6 @@
                                 @endif
                             </td>
 
-                            <!-- TOMBOL BUKTI FOTO -->
-                            <!-- TOMBOL LIHAT FOTO -->
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
                                     @php
@@ -126,7 +119,6 @@
                                 @endif
                             </td>
                             
-                            <!-- AKSI -->
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 <div class="flex items-center justify-center gap-2">
                                     <a href="{{ route('mutasi.edit', $item->id) }}" class="text-slate-400 hover:text-amber-600">
@@ -152,21 +144,18 @@
         </div>
     </div>
 
-        <!-- MODAL POP UP GAMBAR -->
-        <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;" x-transition>
-            <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
-                <div class="flex justify-between items-center mb-4 border-b pb-3">
-                    <h3 class="font-bold text-slate-800 text-base">Bukti Foto Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
-                    <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
-                </div>
-                
-                <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px] flex-col gap-2">
-                    <img :src="activeFile" class="max-h-[60vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
-                    <!-- CEK LINK URL ASLI DI SINI -->
-                    <a :href="activeFile" target="_blank" class="text-[11px] text-amber-400 underline truncate max-w-full" x-text="activeFile"></a>
-                </div>
+    <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;" x-transition>
+        <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h3 class="font-bold text-slate-800 text-base">Bukti Foto Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
+                <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
+            </div>
+            
+            <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px]">
+                <img :src="activeFile" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
             </div>
         </div>
+    </div>
 
 </div>
 @endsection
