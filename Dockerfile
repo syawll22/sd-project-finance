@@ -7,11 +7,10 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /var/www/html
 COPY . .
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Salin config Nginx custom kita
+COPY nginx.conf /etc/nginx/sites-available/default
 
-# Ubah document root Nginx ke folder public Laravel
-RUN sed -i 's|root /var/www/html;|root /var/www/html/public;|g' /etc/nginx/sites-available/default
-RUN sed -i 's/listen 80;/listen ${PORT};/g' /etc/nginx/sites-available/default
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 8080
 
