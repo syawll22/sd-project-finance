@@ -63,34 +63,9 @@
                     $active = (string) request('rekening_id') === (string) $rek->id;
                 @endphp
                 <a href="{{ route('mutasi.index', array_merge(request()->except('rekening_id'), ['rekening_id' => $rek->id])) }}" class="inline-flex flex-col px-4 py-2.5 rounded-xl border text-left transition {{ $active ? 'border-amber-300 bg-amber-50 text-amber-800' : 'border-slate-200 bg-white text-slate-700 hover:border-amber-300 hover:bg-amber-50/50' }}">
-                    <span class="text-sm font-semibold">{{ $labelRekening }}</span>
-                    <span class="text-[11px] {{ $active ? 'text-amber-700' : 'text-slate-500' }}">{{ $labelBank }}</span>
-                </a>
+                    <span class="text-sm font-semibold">{{ $labelRekening }}</span>                </a>
             @endforeach
         </div>
-    </section>
-
-    {{-- FILTER TAMBAHAN --}}
-    <section class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200">
-        <form method="GET" action="{{ route('mutasi.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
-            <div>
-                <label for="filter_rekening" class="block text-sm font-semibold text-slate-700 mb-2">Rekening / Bank</label>
-                <select id="filter_rekening" name="rekening_id" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400">
-                    <option value="">Semua rekening</option>
-                    @foreach ($rekenings as $rek)
-                        <option value="{{ $rek->id }}" @selected((string) request('rekening_id') === (string) $rek->id)>{{ $rek->nama_rekening }} ({{ $rek->nama_bank ?? 'Cash' }})</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label for="filter_bulan" class="block text-sm font-semibold text-slate-700 mb-2">Bulan Transaksi</label>
-                <input id="filter_bulan" type="month" name="bulan" value="{{ request('bulan') }}" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400">
-            </div>
-            <div class="flex gap-2">
-                <button type="submit" class="inline-flex items-center justify-center px-5 py-3 bg-[#1C2A24] text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition">Terapkan Filter</button>
-                <a href="{{ route('mutasi.index') }}" class="inline-flex items-center justify-center px-4 py-3 bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-200 transition">Reset</a>
-            </div>
-        </form>
     </section>
 
     {{-- TABEL MUTASI --}}
