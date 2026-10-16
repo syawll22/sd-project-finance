@@ -36,39 +36,65 @@ class MutasiController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'no_jurnal'   => 'required|string|max:255',
-        'tanggal'     => 'required|date',
-        'rekening_id' => 'required|exists:rekenings,id',
-        'kategori_id' => 'required|exists:kategoris,id',
-        'jenis'       => 'required|in:masuk,keluar,pindah',
-        'nominal'     => 'required|numeric',
-        'keterangan'  => 'nullable|string',
-        'bukti_foto'  => 'nullable|file|image|max:10240',
-    ]);
+    {
+        // Validasi input
+        $request->validate([
+            'tanggal' => 'required|date',
+            'rekening_id' => 'required|exists:rekenings,id',
+            'jenis' => 'required|in:masuk,keluar,pindah',
+            'nominal' => 'required|numeric',
+            'bukti_foto' => 'nullable|image|max:2048',
+        ]);
 
-    $buktiPath = null;
-    if ($request->hasFile('bukti_foto')) {
-        $file = $request->file('bukti_foto');
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $rekening = \App\Models\Rekening::findOrFail($request->rekening_id);
+        $namaBank = $rekening->nama_bank ?? $rekening->nama_rekening ?? 'Cash';
+        
+        // Tentukan KK atau KM
+        $kodeJenis = ($request->jenis === 'masuk') ? 'KM' : 'KK';
+        
+        // Format YYMM dari tanggal transaksi
+        $carbonDate = \Carbon\Carbon::parse($request->tanggal);
+        $tahunBulan = $carbonDate->format('ym'); // Contoh: 2610
+        
+        // Prefix pencarian nomor urut
+        $prefix = "{$namaBank}/{$kodeJenis}-{$tahunBulan}";
+        
+        // Cari nomor urut terakhir di bulan & tahun tersebut untuk bank ini
+        $lastMutasi = \App\Models\Mutasi::where('no_jurnal', 'like', "{$prefix}%")
+                        ->orderBy('no_jurnal', 'desc')
+                        ->first();
+                        
+        $urutan = 1;
+        if ($lastMutasi) {
+            $lastNum = (int) substr($lastMutasi->no_jurnal, -3);
+            $urutan = $lastNum + 1;
+        }
+        
+        $noJurnalOtomatis = $prefix . str_pad($urutan, 3, '0', STR_PAD_LEFT);
 
-        $buktiPath = $file->storeAs('bukti_mutasi', $filename, 'public');
+        // Handle Upload Foto Bukti
+        $pathFoto = null;
+        if ($request->hasFile('bukti_foto')) {
+            $file = $request->file('bukti_foto');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            // Simpan di storage/app/public/bukti_mutasi
+            $pathFoto = $file->storeAs('bukti_mutasi', $filename, 'public');
+        }
+
+        // Simpan ke database
+        \App\Models\Mutasi::create([
+            'tanggal' => $request->tanggal,
+            'no_jurnal' => $noJurnalOtomatis,
+            'rekening_id' => $request->rekening_id,
+            'kategori_id' => $request->kategori_id,
+            'jenis' => $request->jenis,
+            'nominal' => $request->nominal,
+            'keterangan' => $request->keterangan,
+            'bukti_foto' => $pathFoto,
+        ]);
+
+        return redirect()->route('mutasi.index')->with('success', 'Mutasi berhasil ditambahkan dengan No Jurnal: ' . $noJurnalOtomatis);
     }
-
-    Mutasi::create([
-        'no_jurnal'   => $request->no_jurnal,
-        'tanggal'     => $request->tanggal,
-        'rekening_id' => $request->rekening_id,
-        'kategori_id' => $request->kategori_id,
-        'jenis'       => $request->jenis,
-        'nominal'     => $request->nominal,
-        'keterangan'  => $request->keterangan,
-        'bukti_foto'  => $buktiPath,
-    ]);
-
-    return redirect()->route('mutasi.index')->with('success', 'Data Mutasi berhasil ditambahkan!');
-}
 
     public function edit($id)
     {

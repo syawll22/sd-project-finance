@@ -1,76 +1,116 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-sm">
-    <h2 class="text-xl font-bold text-slate-800 mb-6">Tambah Mutasi Transaksi</h2>
+@section('title', 'Tambah Mutasi Transaksi - S&D Finance')
 
-    <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data">
+@section('content')
+<div class="max-w-4xl mx-auto space-y-6 text-xs" 
+     x-data="{ 
+         namaBank: '', 
+         jenis: 'keluar', 
+         tanggal: '{{ date('Y-m-d') }}',
+         get noJurnalAuto() {
+             if (!this.namaBank) return 'Pilih rekening & bank terlebih dahulu...';
+             let kodeJenis = (this.jenis === 'masuk') ? 'KM' : 'KK';
+             let d = new Date(this.tanggal);
+             if (isNaN(d)) return '';
+             let yy = String(d.getFullYear()).slice(-2);
+             let mm = String(d.getMonth() + 1).padStart(2, '0');
+             let ym = yy + mm;
+             // Format preview live (nomor urut otomatis di-handle di backend saat submit)
+             return `${this.namaBank}/${kodeJenis}-${ym}001`;
+         }
+     }">
+
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Tambah Mutasi Transaksi</h1>
+            <p class="text-xs text-slate-500 mt-1">Form pencatatan transaksi kas masuk, kas keluar, dan pindah buku.</p>
+        </div>
+        <a href="{{ route('mutasi.index') }}" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition">
+            &larr; Kembali
+        </a>
+    </div>
+
+    <form action="{{ route('mutasi.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         @csrf
 
-        <div>
-            <label class="block font-semibold text-slate-600 mb-1 text-sm">No Jurnal</label>
-            <input type="text" name="no_jurnal" value="{{ ('no_jurnal') }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
-            @error('no_jurnal') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- TANGGAL TRANSAKSI -->
+            <div>
+                <label class="block font-semibold text-slate-600 mb-2">TANGGAL TRANSAKSI</label>
+                <input type="date" name="tanggal" x-model="tanggal" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+            </div>
+
+            <!-- REKENING / BANK -->
+            <div>
+                <label class="block font-semibold text-slate-600 mb-2">REKENING / BANK</label>
+                <select name="rekening_id" @change="
+                    let opt = $el.options[$el.selectedIndex];
+                    namaBank = opt.getAttribute('data-bank') || '';
+                " class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                    <option value="">-- Pilih Rekening / Bank --</option>
+                    @foreach($rekenings as$rek)
+                        <option value="{{ $rek->id }}" data-bank="{{ $rek->nama_bank ?? $rek->nama_rekening }}">
+                            {{ $rek->nama_rekening }} ({{$rek->nama_bank ?? 'Cash' }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
-        <div>
-            <label class="block font-semibold text-slate-600 mb-1 text-sm">Tanggal</label>
-            <input type="date" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
-            @error('tanggal') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- JENIS TRANSAKSI -->
+            <div>
+                <label class="block font-semibold text-slate-600 mb-2">JENIS TRANSAKSI</label>
+                <select name="jenis" x-model="jenis" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                    <option value="keluar">Keluar (KK)</option>
+                    <option value="masuk">Masuk (KM)</option>
+                    <option value="pindah">Pindah Buku (KK)</option>
+                </select>
+            </div>
+
+            <!-- NOMOR JURNAL OTOMATIS -->
+            <div>
+                <label class="block font-semibold text-slate-600 mb-2">NOMOR JURNAL (OTOMATIS)</label>
+                <input type="text" name="no_jurnal" x-bind:value="noJurnalAuto" readonly class="w-full px-4 py-2.5 bg-slate-100 font-mono font-bold text-slate-700 border border-slate-200 rounded-xl cursor-not-allowed" placeholder="Otomatis terisi..." required>
+                <span class="text-[10px] text-slate-400 mt-1 block">Nomor jurnal digenerate otomatis oleh sistem sesuai format bank dan tanggal.</span>
+            </div>
         </div>
 
-        <div>
-            <label class="block font-semibold text-slate-600 mb-1 text-sm">Rekening / Bank</label>
-            <select name="rekening_id" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
-                <option value="">-- Pilih Rekening --</option>
-                @foreach($rekenings as $rek)
-                    <option value="{{ $rek->id }}">{{ $rek->nama_rekening ?? $rek->bank ?? $rek->name }}</option>
-                @endforeach
-            </select>
-            @error('rekening_id') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
+        <!-- NOMINAL & KATEGORI -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block font-semibold text-slate-600 mb-2">NOMINAL (IDR)</label>
+                <input type="number" name="nominal" step="any" placeholder="Contoh: 1500000" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+            </div>
+            <div>
+                <label class="block font-semibold text-slate-600 mb-2">KATEGORI / AKUN COA</label>
+                <select name="kategori_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                    <option value="">-- Pilih Kategori COA --</option>
+                    @foreach($kategoris ?? [] as $kat)
+                        <option value="{{ $kat->id }}">{{ $kat->no_akun }} - {{$kat->nama_akun }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
+        <!-- KETERANGAN -->
         <div>
-            <label class="block font-semibold text-slate-600 mb-1 text-sm">Kategori COA</label>
-            <select name="kategori_id" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
-                <option value="">-- Pilih Kategori --</option>
-                @foreach($kategoris as $kat)
-                    <option value="{{ $kat->id }}" {{ (isset($mutasi) && $mutasi->kategori_id == $kat->id) ? 'selected' : '' }}>
-                        {{ $kat->nama_akun ?? $kat->nama_kategori ?? $kat->nama ?? $kat->name ?? 'Kategori #'.$kat->id }}
-                    </option>
-                @endforeach
-            </select>
-            @error('kategori_id') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
-        </div>
-        <div class="mb-4">
-            <label class="block font-semibold text-slate-600 mb-2">JENIS TRANSAKSI</label>
-        <select name="jenis" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
-            <option value="masuk" {{ (old('jenis', $mutasi->jenis ?? '') == 'masuk') ? 'selected' : '' }}>Uang Masuk (Masuk)</option>
-            <option value="keluar" {{ (old('jenis', $mutasi->jenis ?? '') == 'keluar') ? 'selected' : '' }}>Uang Keluar (Keluar)</option>
-            <option value="pindah" {{ (old('jenis', $mutasi->jenis ?? '') == 'pindah') ? 'selected' : '' }}>Pindah Buku (Pindah)</option>
-        </select>
-        </div>
-        <div>
-            <label class="block font-semibold text-slate-600 mb-1 text-sm">Nominal (Rp)</label>
-            <input type="number" name="nominal" value="{{ old('nominal') }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
-            @error('nominal') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
+            <label class="block font-semibold text-slate-600 mb-2">KETERANGAN / DESKRIPSI</label>
+            <textarea name="keterangan" rows="3" placeholder="Keterangan transaksi..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]"></textarea>
         </div>
 
+        <!-- UPLOAD BUKTI FOTO -->
         <div>
-            <label class="block font-semibold text-slate-600 mb-1 text-sm">Keterangan</label>
-            <textarea name="keterangan" rows="3" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">{{ old('keterangan') }}</textarea>
-            @error('keterangan') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
+            <label class="block font-semibold text-slate-600 mb-2">BUKTI FOTO TRANSAKSI</label>
+            <input type="file" name="bukti_foto" accept="image/*" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
         </div>
 
-        <div>
-            <label class="block font-semibold text-slate-600 mb-1 text-sm">Bukti Transaksi (Bebas: HEIC, JPG, PNG, PDF, dll)</label>
-            <input type="file" name="bukti_foto" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]">
-            @error('bukti_foto') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="flex justify-end gap-3 pt-4">
-            <a href="{{ route('mutasi.index') }}" class="px-5 py-2.5 bg-slate-200 font-bold text-slate-700 rounded-xl">Batal</a>
-            <button type="submit" class="px-5 py-2.5 bg-[#D8A749] font-bold text-white rounded-xl shadow-sm">Simpan Mutasi</button>
+        <!-- TOMBOL SUBMIT -->
+        <div class="pt-4 flex justify-end">
+            <button type="submit" class="px-6 py-3 bg-[#D8A749] hover:bg-[#c4953f] text-white font-bold rounded-xl transition shadow-sm">
+                Simpan Transaksi Mutasi
+            </button>
         </div>
     </form>
 </div>
