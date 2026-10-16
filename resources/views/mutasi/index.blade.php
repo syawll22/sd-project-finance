@@ -142,27 +142,71 @@
         </div>
     </section>
 
+
     {{-- MODAL PREVIEW FOTO --}}
-    <div x-show="modalOpen" x-cloak x-transition.opacity x-on:click.self="closeModal()" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;" role="dialog" aria-modal="true" aria-label="Preview bukti transaksi">
-        <div class="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl">
-            <div class="flex justify-between items-center gap-4 mb-4 border-b border-slate-100 pb-3">
-                <div><h3 class="font-bold text-slate-900 text-base">Bukti Transaksi</h3><p class="text-xs text-slate-500 mt-1" x-text="activeJurnal"></p></div>
-                <button type="button" x-on:click="closeModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2" aria-label="Tutup modal">&times;</button>
+    <div
+        x-show="modalOpen"
+        x-cloak
+        x-transition.opacity
+        x-on:click.self="closeModal()"
+        x-on:keydown.escape.window="closeModal()"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-2 sm:p-4"
+        style="display: none;"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Preview bukti transaksi"
+    >
+        <div class="relative w-full h-full max-w-7xl max-h-[95vh] flex flex-col">
+
+            {{-- HEADER --}}
+            <div class="flex items-center justify-between gap-4 px-4 py-3 text-white">
+                <div class="min-w-0">
+                    <h3 class="font-bold text-base sm:text-lg">
+                        Bukti Transaksi
+                    </h3>
+                    <p
+                        class="text-xs sm:text-sm text-slate-300 mt-1 truncate"
+                        x-text="activeJurnal"
+                    ></p>
+                </div>
+
+                <button
+                    type="button"
+                    x-on:click="closeModal()"
+                    class="shrink-0 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white text-2xl transition"
+                    aria-label="Tutup preview"
+                >
+                    &times;
+                </button>
             </div>
-            <div class="bg-slate-900 rounded-2xl p-3 sm:p-4 flex items-center justify-center min-h-[280px]">
+
+            {{-- AREA FOTO --}}
+            <div class="flex-1 min-h-0 flex items-center justify-center overflow-hidden">
                 <template x-if="activeFile && !imageError">
-                    <img :src="activeFile" alt="Bukti transaksi" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" x-on:error="imageError = true">
+                    <img
+                        :src="activeFile"
+                        alt="Bukti transaksi"
+                        class="max-w-full max-h-full object-contain rounded-lg"
+                        x-on:error="imageError = true"
+                    >
                 </template>
-                <div x-show="imageError" class="text-center p-6">
-                    <p class="text-white font-semibold">Browser tidak bisa menampilkan file ini atau file gagal dimuat.</p>
-                    <p class="text-slate-300 text-sm mt-2">Untuk HEIC/HEIF, unduh file asli atau buka dengan aplikasi foto yang mendukung format tersebut.</p>
-                    <a :href="activeDownload" class="inline-flex mt-4 px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold text-sm rounded-xl">Unduh file bukti</a>
+
+                {{-- PESAN JIKA FORMAT TIDAK DIDUKUNG --}}
+                <div
+                    x-show="imageError"
+                    class="max-w-md text-center px-6 py-8 text-white"
+                >
+                    <p class="text-lg font-bold">
+                        Foto tidak bisa ditampilkan
+                    </p>
+                    <p class="text-sm text-slate-300 mt-2">
+                        Format file mungkin tidak didukung browser.
+                        File HEIC/HEIF, misalnya, tidak bisa ditampilkan langsung
+                        di beberapa browser.
+                    </p>
                 </div>
             </div>
-            <div class="flex justify-end gap-2 mt-4">
-                <a :href="activeDownload" class="inline-flex items-center justify-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl">Unduh Bukti</a>
-                <button type="button" x-on:click="closeModal()" class="px-4 py-2.5 bg-[#1C2A24] hover:bg-slate-800 text-white text-sm font-semibold rounded-xl">Tutup</button>
-            </div>
+
         </div>
     </div>
 
