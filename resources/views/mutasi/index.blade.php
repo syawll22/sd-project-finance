@@ -285,7 +285,7 @@
                         :src="activeFile"
                         alt="Bukti transaksi"
                         class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto"
-                        @error="imageError = true"
+                        x-on:error="imageError = true"
                     >
                 </template>
 
