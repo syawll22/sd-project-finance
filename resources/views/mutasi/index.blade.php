@@ -111,8 +111,6 @@
                             </td>
 
                             <!-- TOMBOL BUKTI FOTO -->
-                            
-                            <!-- TOMBOL BUKTI FOTO -->
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
                                     @php
@@ -133,7 +131,6 @@
                                     <span class="text-slate-300 italic">No File</span>
                                 @endif
                             </td>
-
                             
                             <!-- AKSI -->
                             <td class="px-6 py-4 text-center whitespace-nowrap">
