@@ -1,3 +1,35 @@
+@extends('layouts.app')
+
+@section('title', 'Tambah Mutasi Transaksi - S&D Finance')
+
+@section('content')
+<div
+    class="max-w-5xl mx-auto space-y-6 pb-10"
+    x-data="{
+        namaBank: '',
+        jenis: @js(old('jenis', 'keluar')),
+        tanggal: @js(old('tanggal', now()->format('Y-m-d'))),
+        namaFile: '',
+        get noJurnalAuto() {
+            if (!this.namaBank || !this.tanggal) return 'Pilih rekening dan tanggal';
+            const kodeJenis = this.jenis === 'masuk' ? 'KM' : 'KK';
+            const d = new Date(this.tanggal + 'T00:00:00');
+            if (isNaN(d.getTime())) return '';
+            const yy = String(d.getFullYear()).slice(-2);
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            return `${this.namaBank}/${kodeJenis}-${yy}${mm}xxx`;
+        },
+        syncBank(select) {
+            const option = select.options[select.selectedIndex];
+            this.namaBank = option ? (option.getAttribute('data-bank') || '') : '';
+        }
+    }"
+    x-init="syncBank($refs.rekening)"
+>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-amber-600 mb-2">S&D Finance</p>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Tambah Mutasi</h1>
             <p class="text-sm text-slate-500 mt-2">Catat transaksi keuangan dengan rapi dan mudah ditelusuri.</p>
         </div>
         <a href="{{ route('mutasi.index') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-semibold rounded-xl transition">
