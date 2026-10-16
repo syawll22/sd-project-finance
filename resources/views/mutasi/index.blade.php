@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6 text-xs" x-data="{ modalOpen: false, activeFile: '', activeJurnal: '' }" @keydown.escape.window="modalOpen = false">
-    
     <!-- Header Page -->
     <div class="flex items-center justify-between">
         <div>
@@ -15,7 +14,6 @@
             <span>+ Tambah Mutasi</span>
         </a>
     </div>
-
     <!-- Filter Card -->
     <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100">
         <form method="GET" action="{{ route('mutasi.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -44,7 +42,6 @@
             </div>
         </form>
     </div>
-
     <!-- Table Card -->
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <div class="overflow-x-auto">
@@ -88,7 +85,6 @@
                             <td class="px-6 py-4 font-semibold text-slate-700">
                                 {{ $item->kategori->nama_akun ?? '-' }}
                             </td>
-                            
                             <!-- KOLOM DEBET -->
                             <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
                                 @if($item->jenis === 'masuk')
@@ -97,7 +93,6 @@
                                     -
                                 @endif
                             </td>
-
                             <!-- KOLOM KREDIT -->
                             <td class="px-6 py-4 font-black text-rose-600 text-right whitespace-nowrap">
                                 @if($item->jenis === 'keluar' || $item->jenis === 'pindah')
@@ -109,7 +104,6 @@
                                     -
                                 @endif
                             </td>
-
                             <!-- TOMBOL BUKTI FOTO -->
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($item->bukti_foto)
@@ -117,7 +111,6 @@
                                         $filename = basename($item->bukti_foto);
                                         $fileUrl = asset('storage/bukti_mutasi/' . $filename);
                                     @endphp
-
                                     <button
                                         type="button"
                                         @click="activeFile = {{ Illuminate\Support\Js::from($fileUrl) }};
@@ -131,7 +124,6 @@
                                     <span class="text-slate-300 italic">No File</span>
                                 @endif
                             </td>
-                            
                             <!-- AKSI -->
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 <div class="flex items-center justify-center gap-2">
@@ -157,15 +149,13 @@
             </table>
         </div>
     </div>
-
     <!-- MODAL POP UP PREVIEW GAMBAR -->
     <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm" style="display: none;" x-transition>
         <div @click.away="modalOpen = false" class="bg-white rounded-3xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
                 <h3 class="font-bold text-slate-800 text-base">Bukti Foto Transaksi - No Jurnal: <span x-text="activeJurnal" class="text-amber-600"></span></h3>
                 <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 font-bold text-2xl px-2 leading-none">&times;</button>
-            </div>
-            
+            </div> 
             <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center flex-1 overflow-hidden min-h-[400px]">
                 <template x-if="activeFile">
                     <img :src="activeFile" @error="$el.src = 'https://placehold.co/600x400?text=Foto+Tidak+Ditemukan'" class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto" alt="Bukti Transaksi">
