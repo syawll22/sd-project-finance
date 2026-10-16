@@ -10,21 +10,26 @@
         modalOpen: false,
         activeFile: '',
         activeJurnal: '',
+        imageError: false,
+
         openModal(file, jurnal) {
             this.activeFile = file;
             this.activeJurnal = jurnal;
+            this.imageError = false;
             this.modalOpen = true;
         },
+
         closeModal() {
             this.modalOpen = false;
             this.activeFile = '';
             this.activeJurnal = '';
+            this.imageError = false;
         }
     }"
     @keydown.escape.window="closeModal()"
 >
-    <!-- HEADER -->
-    <div class="flex items-center justify-between">
+    {{-- HEADER --}}
+    <div class="flex items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight">
                 Mutasi Transaksi
@@ -36,13 +41,13 @@
 
         <a
             href="{{ route('mutasi.create') }}"
-            class="px-4 py-2.5 bg-[#D8A749] hover:bg-[#c4953f] text-white font-bold rounded-xl transition shadow-sm"
+            class="px-4 py-2.5 bg-[#D8A749] hover:bg-[#c4953f] text-white font-bold rounded-xl transition shadow-sm whitespace-nowrap"
         >
             + Tambah Mutasi
         </a>
     </div>
 
-    <!-- FILTER -->
+    {{-- FILTER --}}
     <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100">
         <form
             method="GET"
@@ -60,12 +65,12 @@
                 >
                     <option value="">-- Semua Rekening / Bank --</option>
 
-                    @foreach($rekenings as $rek)
+                    @foreach ($rekenings as $rek)
                         <option
                             value="{{ $rek->id }}"
-                            {{ request('rekening_id') == $rek->id ? 'selected' : '' }}
+                            @selected((string) request('rekening_id') === (string) $rek->id)
                         >
-                            {{ $rek->nama_bank ?? $rek->nama_rekening }}
+                            {{ $rek->nama_bank ?? $rek->nama_rekening ?? '-' }}
                         </option>
                     @endforeach
                 </select>
@@ -102,7 +107,7 @@
         </form>
     </div>
 
-    <!-- TABEL MUTASI -->
+    {{-- TABEL MUTASI --}}
     <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -123,14 +128,14 @@
                 </thead>
 
                 <tbody class="divide-y divide-slate-50 text-xs">
-                    @forelse($mutasis as $item)
+                    @forelse ($mutasis as $item)
                         <tr class="hover:bg-slate-50 transition">
                             <td class="px-6 py-4 font-bold text-slate-800 whitespace-nowrap">
-                                {{ \Carbon\Carbon::parse($item->tanggal)->format('d-M-Y') }}
+                                {{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->format('d-M-Y') : '-' }}
                             </td>
 
                             <td class="px-6 py-4 font-mono font-bold text-slate-600">
-                                {{ $item->no_jurnal }}
+                                {{ $item->no_jurnal ?? '-' }}
                             </td>
 
                             <td class="px-6 py-4 font-semibold text-slate-700">
@@ -153,21 +158,21 @@
                                 {{ $item->kategori->nama_akun ?? '-' }}
                             </td>
 
-                            <!-- DEBET -->
+                            {{-- DEBET --}}
                             <td class="px-6 py-4 font-black text-emerald-600 text-right whitespace-nowrap">
-                                @if($item->jenis === 'masuk')
+                                @if ($item->jenis === 'masuk')
                                     Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
                                 @else
                                     -
                                 @endif
                             </td>
 
-                            <!-- KREDIT -->
+                            {{-- KREDIT --}}
                             <td class="px-6 py-4 font-black text-rose-600 text-right whitespace-nowrap">
-                                @if(in_array($item->jenis, ['keluar', 'pindah']))
+                                @if (in_array($item->jenis, ['keluar', 'pindah']))
                                     Rp {{ number_format($item->nominal ?? 0, 0, ',', '.') }}
 
-                                    @if($item->jenis === 'pindah')
+                                    @if ($item->jenis === 'pindah')
                                         <span class="text-[9px] text-slate-400 block font-normal">
                                             (Pindah)
                                         </span>
@@ -177,9 +182,9 @@
                                 @endif
                             </td>
 
-                            <!-- BUKTI FOTO -->
+                            {{-- BUKTI FOTO --}}
                             <td class="px-6 py-4 text-center whitespace-nowrap">
-                                @if($item->bukti_foto)
+                                @if ($item->bukti_foto)
                                     @php
                                         $filename = basename($item->bukti_foto);
                                         $fileUrl = asset('storage/bukti_mutasi/' . $filename);
@@ -187,10 +192,7 @@
 
                                     <button
                                         type="button"
-                                        @click="openModal(
-                                            {{ \Illuminate\Support\Js::from($fileUrl) }},
-                                            {{ \Illuminate\Support\Js::from($item->no_jurnal) }}
-                                        )"
+                                        @click='openModal(@json($fileUrl), @json($item->no_jurnal ?? ""))'
                                         class="px-2.5 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg hover:bg-amber-100 transition"
                                     >
                                         Lihat Foto
@@ -200,13 +202,14 @@
                                 @endif
                             </td>
 
-                            <!-- AKSI -->
+                            {{-- AKSI --}}
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 <div class="flex items-center justify-center gap-3">
                                     <a
                                         href="{{ route('mutasi.edit', $item->id) }}"
                                         class="text-slate-400 hover:text-amber-600"
                                         title="Edit mutasi"
+                                        aria-label="Edit mutasi"
                                     >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -225,6 +228,7 @@
                                             type="submit"
                                             class="text-slate-400 hover:text-rose-600"
                                             title="Hapus mutasi"
+                                            aria-label="Hapus mutasi"
                                         >
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -246,7 +250,7 @@
         </div>
     </div>
 
-    <!-- MODAL PREVIEW FOTO -->
+    {{-- MODAL PREVIEW FOTO --}}
     <div
         x-show="modalOpen"
         x-cloak
@@ -254,6 +258,9 @@
         @click.self="closeModal()"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
         style="display: none;"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Preview bukti foto transaksi"
     >
         <div class="bg-white rounded-3xl max-w-3xl w-full p-5 md:p-6 relative shadow-2xl">
             <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
@@ -273,17 +280,17 @@
             </div>
 
             <div class="bg-slate-900 rounded-2xl p-3 flex items-center justify-center min-h-[300px]">
-                <template x-if="activeFile">
+                <template x-if="activeFile && !imageError">
                     <img
                         :src="activeFile"
                         alt="Bukti transaksi"
                         class="max-h-[65vh] max-w-full object-contain rounded-xl mx-auto"
-                        @error="$el.style.display = 'none'; $el.nextElementSibling.style.display = 'block'"
+                        @error="imageError = true"
                     >
                 </template>
 
                 <p
-                    style="display: none;"
+                    x-show="imageError"
                     class="text-white text-center p-6"
                 >
                     Foto gagal dimuat. Periksa URL dan lokasi penyimpanan foto.
