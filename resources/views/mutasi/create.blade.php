@@ -43,16 +43,15 @@
             <!-- REKENING / BANK -->
             <div>
                 <label class="block font-semibold text-slate-600 mb-2">REKENING / BANK</label>
-                <select name="rekening_id" @change="
-                    let opt = $el.options[$el.selectedIndex];
-                    namaBank = opt.getAttribute('data-bank') || '';
-                " class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
+                <select name="rekening_id" @change="let opt = $el.options[$el.selectedIndex]; namaBank = opt.getAttribute('data-bank') || '';" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
                     <option value="">-- Pilih Rekening / Bank --</option>
-                    @foreach($rekenings as$rek)
-                        <option value="{{ $rek->id }}" data-bank="{{ $rek->nama_bank ?? $rek->nama_rekening }}">
-                            {{ $rek->nama_rekening }} ({{$rek->nama_bank ?? 'Cash' }})
-                        </option>
-                    @endforeach
+                    @if(isset($rekenings) && count($rekenings) > 0)
+                        @foreach($rekenings as $rek)
+                            <option value="{{ $rek->id }}" data-bank="{{ $rek->nama_bank ?? $rek->nama_rekening }}">
+                                {{ $rek->nama_rekening }} ({{ $rek->nama_bank ?? 'Cash' }})
+                            </option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
         </div>
@@ -86,9 +85,11 @@
                 <label class="block font-semibold text-slate-600 mb-2">KATEGORI / AKUN COA</label>
                 <select name="kategori_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#D8A749]" required>
                     <option value="">-- Pilih Kategori COA --</option>
-                    @foreach($kategoris as$kat)
-                        <option value="{{ $kat->id }}">{{ $kat->no_akun }} - {{$kat->nama_akun }}</option>
-                    @endforeach
+                    @if(isset($kategoris) && count($kategoris) > 0)
+                        @foreach($kategoris as $kat)
+                            <option value="{{ $kat->id }}">{{ $kat->no_akun }} - {{ $kat->nama_akun }}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
         </div>

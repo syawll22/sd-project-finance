@@ -30,8 +30,9 @@ class MutasiController extends Controller
 
     public function create()
     {
-        $rekenings = Rekening::all();
-        $kategoris = Kategori::all();
+        $rekenings = \App\Models\Rekening::all();
+        $kategoris = \App\Models\Kategori::all();
+        
         return view('mutasi.create', compact('rekenings', 'kategoris'));
     }
 
