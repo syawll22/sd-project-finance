@@ -305,4 +305,3 @@
     }
 </style>
 @endsection
-@endsection
